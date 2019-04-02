@@ -1,0 +1,50 @@
+<deploy_config name="h17-sgqyzh5.feidou.com" language="zh_CN" regionId="1" serverGroupId="1" localDomain="api.feidou.com">
+
+    <!--  资源文件相关配置
+    	dir：资源文件的主目录
+    -->
+	<resource dir="/data0/wg_resources"/>
+	
+	<!--  战报文件相关配置
+    	dir：战报生成文件的主目录
+    -->
+	<battleReport dir="/data0/reports"/>
+	
+	<!-- 游戏数据库 
+	username：DB的账号
+        password：DB的密码
+        ip：DB的IP地址
+        port：数据库所在机器的内网地址
+        database：要连接的库名称-->
+	<mmo_db username="sgqyh5" password="mRYsETp5U3xh" ip="127.0.0.1" port="3306" database="wg_lj" />
+		
+	<!-- 日志数据库 属性同游戏数据库配置 -->
+	<log_db username="sgqyh5" password="mRYsETp5U3xh" ip="127.0.0.1" port="3306" database="wg_lj_log" />
+
+	<!-- 日志服配置
+        id：内部使用的ID，不必更改
+        name：服务器名称，不必更改
+        lanip：日志服的内网绑定IP，既服务所在机器的IP
+        lanport：内网端口
+        xmx，xms：Java启动的相关内存参数，两值相同，推荐设置1024，参见内存参数设置-->
+	<log_server id="5667" name="LogServer_h17" lanip="10.10.9.24" lanport="8083" xmx="819" xms="819" telnetPort="-1" />
+
+	<!-- 游戏服配置属性说明
+        id：gameserver的id，与线对应
+        name：选线时显示的名称
+        lanip：游戏服所在机器的IP，生成目录用
+        wanip：外网的绑定IP
+        wanport：外网端口，支持多端口,如："80,8080,7070,443"
+     	xmx，xms：Java启动的相关内存参数，两值相同，推荐设置1536，参见内存参数设置-->
+	<game_server operation_com="kx" wallowControlled="false" probeTurnOn="false" id="5667" name="GameServer_h17" lanip="10.10.9.24" lanport="8080" wanip="0.0.0.0" wanport="6060" wsport="8080" telnetPort="7000" xmx="4096" xms="4096" templateXorLoad="false" turnOnCenter="true" gameID="5724" gameCenterDomain="http://hs.sgqyzh5.feidou.com:8090/game_center_server/local/" supportTerminalType="3"  localKey="Y9ZsWYSJfQrcHfWmikNE" useWss="false" keyStorePath="/data0/wg_resources/scripts/feidou.p12" keyType="PKCS12" keyPassword="123456" />
+	<!--
+	client 配置属性说明
+        ip：客户端所在机器的IP，创建目录使用
+        title：浏览器中显示的名称，即服的名称
+        resource_url：资源文件的url路径，可不添写
+        sound_url：声音文件的url路径，可不添写:
+        auto_login：自己登录的配置
+        login_url: 如果没有 cookie, 则跳转到指定登陆页面
+        use_simple_version: 使用简化版本的角色创建过程
+    -->
+</deploy_config>
