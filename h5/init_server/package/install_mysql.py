@@ -80,7 +80,7 @@ class MysqlInstaller(object):
         os.system('/bin/chown mysql.mysql -R %s' % data_dir_one)
         os.system('/bin/ln -s %s %s && chown -R mysql.mysql %s' % (data_dir_one, soft_line_data_dir_one, soft_line_data_dir_one))
 
-        if self.instance_count >= 2 :
+        if self.instance_count >= 2:
             data_dir_two = '/data1/mysql'
             soft_line_data_dir_two = '/var/lib/mysql3307'
             os.mkdir(data_dir_two)
