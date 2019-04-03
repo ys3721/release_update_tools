@@ -216,7 +216,7 @@ if __name__ == "__main__":
     if os.path.isdir("/data0/mysql"):
         kwargs = {
             'user': 'root',
-            'pass': 'xssx1by',
+            'pass': '123456',
             'host': '127.0.0.1',
             'dbname': 'wg_lj',
             'rsync_ip': '10.10.2.4',
@@ -225,8 +225,7 @@ if __name__ == "__main__":
             'backup_path': '/data0/backup/',
             'socks': '/var/lib/mysql/mysql.sock',
             'data': 'data0',
-            #这个是中心服ip 省事儿
-            'wanip': '139.199.12.180'
+            'wanip': '119.29.197.61'
         }
         sc1 = BackupMySQLDB(kwargs)
         sc1.work()
@@ -235,7 +234,7 @@ if __name__ == "__main__":
     if os.path.isdir("/data1/mysql"):
         kwargs2 = {
             'user': 'root',
-            'pass': 'xssx1by',
+            'pass': '123456',
             'host': '127.0.0.1',
             'dbname': 'wg_lj',
             'rsync_ip': '10.10.2.4',
@@ -244,7 +243,7 @@ if __name__ == "__main__":
             'backup_path': '/data0/backup/',
             'socks': '/var/lib/mysql3307/mysql.sock',
             'data': 'data1',
-            'wanip': '139.199.12.180'
+            'wanip': '119.29.197.61'
         }
         sc2 = BackupMySQLDB(kwargs2)
         sc2.work()
@@ -253,7 +252,7 @@ if __name__ == "__main__":
     if os.path.isdir("/data5/mysql"):
         kwargs3 = {
             'user': 'root',
-            'pass': 'xssx1by',
+            'pass': '123456',
             'host': '127.0.0.1',
             'dbname': 'wg_lj',
             'rsync_ip': '10.10.2.4',
@@ -262,7 +261,7 @@ if __name__ == "__main__":
             'backup_path': '/data0/backup/',
             'socks': '/var/lib/mysql3308/mysql.sock',
             'data': 'data5',
-            'wanip': '139.199.12.180'
+            'wanip': '119.29.197.61'
         }
         sc3 = BackupMySQLDB(kwargs3)
         sc3.work()
@@ -271,7 +270,7 @@ if __name__ == "__main__":
     if os.path.isdir("/data6/mysql"):
         kwargs4 = {
             'user': 'root',
-            'pass': 'xssx1by',
+            'pass': '123456',
             'host': '127.0.0.1',
             'dbname': 'wg_lj',
             'rsync_ip': '10.10.2.4',
@@ -280,7 +279,7 @@ if __name__ == "__main__":
             'backup_path': '/data0/backup/',
             'socks': '/var/lib/mysql3309/mysql.sock',
             'data':'data6',
-            'wanip': '139.199.12.180'
+            'wanip': '119.29.197.61'
         }
         sc4 = BackupMySQLDB(kwargs4)
         sc4.work()

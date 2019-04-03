@@ -9,6 +9,9 @@ import commands
 import traceback
 import time
 
+#改
+GAME_ID = 5614
+
 # 这个配置不是常量 需要修改用手，而且要和install mysql的脚步对应上
 DB_PASSWORD_CONFIG = {"sys_user": "root", "sys_password": "123456",
                       "game_user": "root", "game_password": "123456",
@@ -140,9 +143,8 @@ def copy_depends(config_dictionary):
     ip = config_dictionary[0]['lan_ip']
     os.system("ssh root@%s 'mkdir -p /data0/'" % ip)
     os.system("/usr/bin/scp package/jdk7.zip root@%s:/data0" % ip)
-    os.system("/usr/bin/scp package/back_mysql.py root@%s:/data0/back_mysql.py" % ip)
+    os.system("/usr/bin/scp package/backup_mysql.py root@%s:/data0/backup_mysql.py" % ip)
     os.system("/usr/bin/scp package/install_mysql.py root@%s:/data0/install_mysql.py" % ip)
-    #os.system("/usr/bin/scp package/install_server.py root@%s:/data0/install_server.py" % ip)
 
     for config in config_dictionary:
         os.system("ssh root@%s 'mkdir -p %s/wg_deploy'" % (ip, config['path']))
@@ -195,8 +197,9 @@ def update_center_server_xml(config_dic_array):
     for _config in config_dic_array:
         if _config["server_name"] in _content:
             continue
-        _line = """<server ip="%s" port="%s" gameID="5724" serverID="%s"></server>   <!--%s-->""" % \
-                (_config["lan_ip"], _config["telnet_port"], _config["server_id"], _config["server_name"])
+        ##
+        _line = """<server ip="%s" port="%s" gameID="%s" serverID="%s"></server>   <!--%s-->""" % \
+                (_config["lan_ip"], _config["telnet_port"], GAME_ID, _config["server_id"], _config["server_name"])
         _content = _content.replace("</servers>", _line+"\n</servers>")
     _will_write_file = open("/data0/wg_center/WEB-INF/classes/gameserver.xml", 'w');
     _will_write_file.write(_content)
