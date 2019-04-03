@@ -189,6 +189,26 @@ def init_game_server(config_dic_array):
     os.system(cmd)
 
 
+def config_conform(config_dictionary_arr):
+    print "将要为一个云服务器部署%d个游戏服！" % len(config_dictionary_arr)
+    _lan_ip = ""
+    _wan_ip = ""
+    for _config in config_dictionary_arr:
+        print "\n\n"
+        print "服务器 %s" % _config["server_name"]
+        print "server_name \t%s\n" % _config["server_name"]
+        print "server_id \t %s" % _config["server_id"]
+        print "region_id \t %s" % _config["region_id"]
+        print "domain    \t%s" % _config["domain"]
+        print "domain_prefix  %s" % _config["domain_prefix"]
+        print "lan_ip    \t%s" % _config["lan_ip"]
+        print "wan_ip    \t%s" % _config["wan_ip"]
+        print "turnOnCenter \t%s\n" % _config["turnOnCenter"]
+
+    _conform = raw_input("重要，确认是否正确！ 正确y，错误n\n")
+    if _conform != "y":
+        exit(1)
+
 def update_center_server_xml(config_dic_array):
     time_tag = int(time.time())
     os.system("cp /data0/wg_center/WEB-INF/classes/gameserver.xml /data0/wg_center/WEB-INF/classes/gameserver_%d.xml" % time_tag)
@@ -227,6 +247,7 @@ if conform != 'y':
 # 授权
 auth_server(deploy_config[0]['lan_ip'])
 generate_deploy_config(deploy_config)
+config_conform(deploy_config)
 generate_gm_xml(deploy_config)
 copy_depends(deploy_config)
 install_mysql(deploy_config)
