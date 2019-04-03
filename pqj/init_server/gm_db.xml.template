@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databases>
+
+<database id="#server_id#" typeId="#region_id#" dbSrvName="#server_name#" svrName="#server_name#" svrId="#server_id#"
+		svrUrl="http://#domain#" 
+		dbIp="#lan_ip#" dbPort="#mysql_port#"
+		dbName="wg_lj" u="#gm_user#" ps="#gm_password#"
+		telIp="#lan_ip#" telPort="#telnet_port#" />
+<database id="log_#server_id#" typeId="#region_id#" dbSrvName="log_#server_name#" svrName="#server_name#(日志)" svrId="#server_id#"
+		svrUrl="http://#domain#"
+		dbIp="#lan_ip#" dbPort="#mysql_port#"
+		dbName="wg_lj_log" u="#gm_user#" ps="#gm_password#"
+		telIp="#lan_ip#" telPort="-1" />
+</databases>
+
+<!-- 
+database：
+   配置每一组服对应的游戏数据库服务器和游戏日志数据服务器
+    默认 第一个database作为s1,该数据库服务器上存有sys_user表
+	id：唯一id，与服务器端的serverId无关
+	typeId:表示是大区下某一组服,例如:typeId='1',它对应的大区是id="1"的龙之刃大区.
+	dbSrvName:后台服务器名，与服务器端服务器名无关。如id="1"的名称为“test1”
+    svrName: 服务器端游戏服务器对应的名字,在快速通道中显示名称
+	svrId:取服务器端serverId的前三位
+    svrUrl: 服务器端游戏服务器对应的ip地址或者域名,通过快速通道,在gm平台可以直接登录到游戏服务器中.
+	dbIp: 数据库ip
+	dbPort:数据库端口
+	dbName:数据库名称
+	u: 该数据库的用户名
+	ps:该数据库的密码
+	tel_ip:gm 管理的游戏服务器的ip地址
+	tel_port: gm 管理的游戏服务器的端口地址
+
+注意: 1.每一组游戏数据库服务器对应一组游戏日志数据库服务器, id是以"log_"开头,与游戏数据库配置字段基本相似,具体配置参照上面示例.
+      2.游戏数据库服务器配置主库的ip地址
+	  3.游戏日志数据库服务器配置从库的ip地址
+-->
