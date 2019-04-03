@@ -169,7 +169,7 @@ class MysqlInstaller(object):
         role_cron_file = open("/var/spool/cron/root", "r")
         content = role_cron_file.read()
         if "backup_mysql.py" not in content:
-            rand = random.randint(60)
+            rand = random.randint(1,60)
             os.system('echo "%d 04 * * * /usr/bin/python  /data0/backup_mysql.py 2>&1 > /dev/null" >> /var/spool/cron/root' % rand)
 
     def check_and_install(self):
