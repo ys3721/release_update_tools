@@ -225,8 +225,7 @@ if __name__ == "__main__":
             'backup_path': '/data0/backup/',
             'socks': '/var/lib/mysql/mysql.sock',
             'data': 'data0',
-            #这个是中心服ip 省事儿
-            'wanip': '139.199.12.180'
+            'wanip': '111.230.144.107'
         }
         sc1 = BackupMySQLDB(kwargs)
         sc1.work()
@@ -244,7 +243,7 @@ if __name__ == "__main__":
             'backup_path': '/data0/backup/',
             'socks': '/var/lib/mysql3307/mysql.sock',
             'data': 'data1',
-            'wanip': '139.199.12.180'
+            'wanip': '111.230.144.107'
         }
         sc2 = BackupMySQLDB(kwargs2)
         sc2.work()
@@ -262,7 +261,7 @@ if __name__ == "__main__":
             'backup_path': '/data0/backup/',
             'socks': '/var/lib/mysql3308/mysql.sock',
             'data': 'data5',
-            'wanip': '139.199.12.180'
+            'wanip': '111.230.144.107'
         }
         sc3 = BackupMySQLDB(kwargs3)
         sc3.work()
@@ -280,7 +279,7 @@ if __name__ == "__main__":
             'backup_path': '/data0/backup/',
             'socks': '/var/lib/mysql3309/mysql.sock',
             'data':'data6',
-            'wanip': '139.199.12.180'
+            'wanip': '111.230.144.107'
         }
         sc4 = BackupMySQLDB(kwargs4)
         sc4.work()

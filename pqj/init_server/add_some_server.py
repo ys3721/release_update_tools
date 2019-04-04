@@ -16,7 +16,7 @@ DB_PASSWORD_CONFIG = {"sys_user": "root", "sys_password": "xssx1by",
                       }
 
 # 常量一般不用修改
-MEMORY_CONFIG = {"1": {"game_server_memory": '8560', "log_server_memory": '1212'},
+MEMORY_CONFIG = {"1": {"game_server_memory": '8560', "log_server_memory": '1012'},
                  "2": {"game_server_memory": '4096', "log_server_memory": '819'},
                  "3": {"game_server_memory": '3072', "log_server_memory": '512'},
                  "4": {"game_server_memory": '2560', "log_server_memory": '512'}
@@ -160,7 +160,7 @@ def copy_depends(config_dictionary):
     ip = config_dictionary[0]['lan_ip']
     os.system("ssh root@%s 'mkdir -p /data0/'" % ip)
     os.system("/usr/bin/scp package/jdk7.zip root@%s:/data0" % ip)
-    os.system("/usr/bin/scp package/back_mysql.py root@%s:/data0/back_mysql.py" % ip)
+    os.system("/usr/bin/scp package/backup_mysql.py root@%s:/data0/backup_mysql.py" % ip)
     os.system("/usr/bin/scp package/install_mysql.py root@%s:/data0/install_mysql.py" % ip)
     #os.system("/usr/bin/scp package/install_server.py root@%s:/data0/install_server.py" % ip)
 

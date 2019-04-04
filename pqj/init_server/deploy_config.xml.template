@@ -36,7 +36,8 @@
         wanip：外网的绑定IP
         wanport：外网端口，支持多端口,如："80,8080,7070,443"
      	xmx，xms：Java启动的相关内存参数，两值相同，推荐设置1536，参见内存参数设置-->
-	<game_server operation_com="kx" wallowControlled="false" probeTurnOn="false" id="#server_id#" name="GameServer_#server_name#" lanip="#lan_ip#" lanport="#game_port#" wanip="0.0.0.0" wanport="#ex_port#" wsport="#game_port#" telnetPort="#telnet_port#" xmx="#game_server_memory#" xms="#game_server_memory#" templateXorLoad="false" turnOnCenter="#turnOnCenter#" gameID="5724" gameCenterDomain="http://hs.sgqyzh5.feidou.com:8090/game_center_server/local/" supportTerminalType="3"  localKey="Y9ZsWYSJfQrcHfWmikNE" useWss="false" keyStorePath="/data0/wg_resources/scripts/feidou.p12" keyType="PKCS12" keyPassword="123456" />
+	<game_server operation_com="kx" wallowControlled="false" probeTurnOn="false" id="#server_id#" name="GameServer_#server_name#" lanip="#lan_ip#" lanport="#game_port#" wanip="0.0.0.0" wanport="#game_port#" telnetPort="#telnet_port#" xmx="#game_server_memory#" xms="#game_server_memory#" templateXorLoad="false" turnOnCenter="#turnOnCenter#" gameID="5698" gameCenterDomain="http://pt.pqj.feidou.com:8090/game_center_server/local/" supportTerminalType="3"  localKey="4Y2znlWKGjgruLDEywKg" crossServerIp="10.10.20.19" />
+
 	<!--
 	client 配置属性说明
         ip：客户端所在机器的IP，创建目录使用
