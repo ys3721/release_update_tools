@@ -11,6 +11,7 @@ import time
 
 #改
 GAME_ID = 5614
+LOCAL_CENTER_IP = "119.29.197.61"
 
 # 这个配置不是常量 需要修改用手，而且要和install mysql的脚步对应上
 DB_PASSWORD_CONFIG = {"sys_user": "root", "sys_password": "123456",
@@ -225,7 +226,7 @@ def update_center_server_xml(config_dic_array):
     _will_write_file.write(_content)
     _will_write_file.flush()
     _will_write_file.close()
-    os.system("curl http://%s:8090/game_center_server/local/reload.gameserverxml" % "119.29.197.61")
+    os.system("curl http://%s:8090/game_center_server/local/reload.gameserverxml" % LOCAL_CENTER_IP)
 
 """
 This script solve deploy multiply game server on one machine by args count
