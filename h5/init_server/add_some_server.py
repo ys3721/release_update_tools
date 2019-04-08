@@ -9,6 +9,10 @@ import commands
 import traceback
 import time
 
+#改
+GAME_ID = 5724
+LOCALHOST_CENTER_IP = '139.199.12.180'
+
 # 这个配置不是常量 需要修改用手，而且要和install mysql的脚步对应上
 DB_PASSWORD_CONFIG = {"sys_user": "root", "sys_password": "xssx1by",
                       "game_user": "sgqyh5", "game_password": "mRYsETp5U3xh",
@@ -215,14 +219,14 @@ def update_center_server_xml(config_dic_array):
     for _config in config_dic_array:
         if _config["server_name"] in _content:
             continue
-        _line = """<server ip="%s" port="%s" gameID="5724" serverID="%s"></server>   <!--%s-->""" % \
-                (_config["lan_ip"], _config["telnet_port"], _config["server_id"], _config["server_name"])
+        _line = """<server ip="%s" port="%s" gameID="%d" serverID="%s"></server>   <!--%s-->""" % \
+                (_config["lan_ip"], _config["telnet_port"], GAME_ID, _config["server_id"], _config["server_name"])
         _content = _content.replace("</servers>", _line+"\n</servers>")
     _will_write_file = open("/data0/wg_center/WEB-INF/classes/gameserver.xml", 'w');
     _will_write_file.write(_content)
     _will_write_file.flush()
     _will_write_file.close()
-    os.system("curl http://%s:8090/game_center_server/local/reload.gameserverxml" % "139.199.12.180")
+    os.system("curl http://%s:8090/game_center_server/local/reload.gameserverxml" % LOCALHOST_CENTER_IP)
 
 def restart_gm():
     os.system("sh /data0/apache-tomcat-7.0.39/bin/shutdown.sh")
