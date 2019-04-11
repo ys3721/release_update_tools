@@ -127,11 +127,28 @@ if $DEPLOY; then
         if [[ $file =~ "data" ]] && [ $file != "data" ] && [ $file != "data2" ] && [ $file != "data3" ]; then
             echo "/"$file being deploy ....
             cd "/"$file/wg_deploy
+            if [ ! -e deploy_current_path.sh ]; then
+                exit 1
+            fi
             sh deploy_current_path.sh
         fi
     done
 
 fi
+
+#anyway back up mysql
+if [ ! -f "/data0/sql_bak" ]; then
+    echo "creating /data0/sql_bak ...."
+    mkdir /data0/sql_bak
+fi
+echo "start back up mysql"
+for j in `seq $DATA_COUNT`
+do
+    port=`expr 3305 + $j`
+    back_up_file="/data0/sql_bak/`date +%Y%m%d%H%M%S`_${port}.sql"
+    echo $back_up_file
+    /usr/local/mysql/bin/mysqldump -uroot -p$MYSQL_ROOT_PW -h127.0.0.1 -P$port wg_lj > $back_up_file
+done
 
 #execute update sql file
 if $UPDATE_DB; then
