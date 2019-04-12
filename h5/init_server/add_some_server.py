@@ -164,7 +164,7 @@ def copy_depends(config_dictionary):
     ip = config_dictionary[0]['lan_ip']
     os.system("ssh root@%s 'mkdir -p /data0/'" % ip)
     os.system("/usr/bin/scp package/jdk7.zip root@%s:/data0" % ip)
-    os.system("/usr/bin/scp package/back_mysql.py root@%s:/data0/back_mysql.py" % ip)
+    os.system("/usr/bin/scp package/backup_mysql.py root@%s:/data0/back_mysql.py" % ip)
     os.system("/usr/bin/scp package/install_mysql.py root@%s:/data0/install_mysql.py" % ip)
     #os.system("/usr/bin/scp package/install_server.py root@%s:/data0/install_server.py" % ip)
 
