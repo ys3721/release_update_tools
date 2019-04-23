@@ -9,6 +9,10 @@ import commands
 import traceback
 import time
 
+#改
+GAME_ID = 5746
+LOCALHOST_CENTER_IP = '134.175.233.30'
+
 # 这个配置不是常量 需要修改用手，而且要和install mysql的脚步对应上
 DB_PASSWORD_CONFIG = {"sys_user": "root", "sys_password": "xssx1by",
                       "game_user": "sgqyh5", "game_password": "mRYsETp5U3xh",
@@ -16,14 +20,14 @@ DB_PASSWORD_CONFIG = {"sys_user": "root", "sys_password": "xssx1by",
                       }
 
 # 常量一般不用修改
-MEMORY_CONFIG = {"1": {"game_server_memory": '2560', "log_server_memory": '512'},
+MEMORY_CONFIG = {"1": {"game_server_memory": '8560', "log_server_memory": '1212'},
                  "2": {"game_server_memory": '4096', "log_server_memory": '819'},
                  "3": {"game_server_memory": '3072', "log_server_memory": '512'},
                  "4": {"game_server_memory": '2560', "log_server_memory": '512'}
                  }
 # 约定常量一般不用修改
 DEFAULT_CONFIG = [{'path': '/data0', 'mysql_port': '3306', 'game_port': '8080', 'telnet_port' : '7000',
-                   'log_port': '8083', 'ex_port': "6060"},
+                   'log_port': '8083', 'ex_port': "6061"},
                   {'path': '/data1', 'mysql_port': '3307', 'game_port': '8307', 'telnet_port' : '7307',
                    'log_port': '8007', 'ex_port': "6307"},
                   {'path': '/data5', 'mysql_port': '3308', 'game_port': '8308', 'telnet_port' : '7308',
@@ -117,6 +121,26 @@ def generate_deploy_config(config_dictionary):
         gen_file.flush()
         gen_file.close()
 
+def config_conform(config_dictionary_arr):
+    print "将要为一个云服务器部署%d个游戏服！" % len(config_dictionary_arr)
+    _lan_ip = ""
+    _wan_ip = ""
+    for _config in config_dictionary_arr:
+        print "\n\n"
+        print "服务器 %s" % _config["server_name"]
+        print "server_name \t%s\n" % _config["server_name"]
+        print "server_id \t %s" % _config["server_id"]
+        print "region_id \t %s" % _config["region_id"]
+        print "domain    \t%s" % _config["domain"]
+        print "domain_prefix  %s" % _config["domain_prefix"]
+        print "lan_ip    \t%s" % _config["lan_ip"]
+        print "wan_ip    \t%s" % _config["wan_ip"]
+        print "turnOnCenter \t%s\n" % _config["turnOnCenter"]
+
+    _conform = raw_input("重要，确认是否正确！ 正确y，错误n\n")
+    if _conform != "y":
+        exit(1)
+
 
 def generate_gm_xml(config_dictionary):
     # 生成配置文件 db_x.xml 到 gm后台的对应目录中
@@ -140,7 +164,7 @@ def copy_depends(config_dictionary):
     ip = config_dictionary[0]['lan_ip']
     os.system("ssh root@%s 'mkdir -p /data0/'" % ip)
     os.system("/usr/bin/scp package/jdk7.zip root@%s:/data0" % ip)
-    os.system("/usr/bin/scp package/back_mysql.py root@%s:/data0/back_mysql.py" % ip)
+    os.system("/usr/bin/scp package/backup_mysql.py root@%s:/data0/back_mysql.py" % ip)
     os.system("/usr/bin/scp package/install_mysql.py root@%s:/data0/install_mysql.py" % ip)
     #os.system("/usr/bin/scp package/install_server.py root@%s:/data0/install_server.py" % ip)
 
@@ -195,14 +219,19 @@ def update_center_server_xml(config_dic_array):
     for _config in config_dic_array:
         if _config["server_name"] in _content:
             continue
-        _line = """<server ip="%s" port="%s" gameID="5724" serverID="%s"></server>   <!--%s-->""" % \
-                (_config["lan_ip"], _config["telnet_port"], _config["server_id"], _config["server_name"])
+        _line = """<server ip="%s" port="%s" gameID="%d" serverID="%s"></server>   <!--%s-->""" % \
+                (_config["lan_ip"], _config["telnet_port"], GAME_ID, _config["server_id"], _config["server_name"])
         _content = _content.replace("</servers>", _line+"\n</servers>")
     _will_write_file = open("/data0/wg_center/WEB-INF/classes/gameserver.xml", 'w');
     _will_write_file.write(_content)
     _will_write_file.flush()
     _will_write_file.close()
-    os.system("curl http://%s:8090/game_center_server/local/reload.gameserverxml" % "134.175.233.30")
+    os.system("curl http://%s:8090/game_center_server/local/reload.gameserverxml" % LOCALHOST_CENTER_IP)
+
+def restart_gm():
+    os.system("sh /data0/apache-tomcat-7.0.39/bin/shutdown.sh")
+    time.sleep(15)
+    os.system("sh /data0/apache-tomcat-7.0.39/bin/startup.sh")
 
 """
 This script solve deploy multiply game server on one machine by args count
@@ -218,12 +247,13 @@ for i in range(0, deploy_count):
 
 print deploy_config
 
-conform = raw_input("is right ? y/n")
+conform = raw_input("确认开始部署服务器?hx.config已经填写完毕？ y/n")
 if conform != 'y':
     exit(1)
 # 授权
 auth_server(deploy_config[0]['lan_ip'])
 generate_deploy_config(deploy_config)
+config_conform(deploy_config)
 generate_gm_xml(deploy_config)
 copy_depends(deploy_config)
 install_mysql(deploy_config)
@@ -231,3 +261,5 @@ upzip_jdk(deploy_config)
 run_deploy_tool(deploy_config)
 update_center_server_xml(deploy_config)
 init_game_server(deploy_config)
+restart_gm()
+

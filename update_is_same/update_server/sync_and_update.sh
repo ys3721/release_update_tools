@@ -38,6 +38,7 @@ ip=$lan_ip
 echo $ip
 #copying update_server.sh script to $ip
 scp update_locate_server.sh root@$ip:/data0
+scp /data3/init_server/package/deploy_current_path.sh root@$ip:/data0
 
 #remove all old release files
 ssh root@$ip "[ -d /data0 ] && rm /data0/*.zip"

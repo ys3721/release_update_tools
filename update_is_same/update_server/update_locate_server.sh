@@ -127,6 +127,7 @@ if $DEPLOY; then
         if [[ $file =~ "data" ]] && [ $file != "data" ] && [ $file != "data2" ] && [ $file != "data3" ]; then
             echo "/"$file being deploy ....
             cd "/"$file/wg_deploy
+            cp /data0/deploy_current_path.sh ./
             if [ ! -e deploy_current_path.sh ]; then
                 exit 1
             fi
@@ -164,7 +165,7 @@ if $UPDATE_DB; then
             echo "executing $UPDATE_SQL_FILE for port = $port"
 		    /usr/local/mysql/bin/mysql -uroot -p$MYSQL_ROOT_PW -h127.0.0.1 -P$port wg_lj < $UPDATE_SQL_FILE
 		    #/usr/local/mysql/bin/mysql -uroot -p$MYSQL_ROOT_PW -h127.0.0.1 -P$port -e "source /data0/wg_sql/lj_db_update.sql" -f
-            echo 'update all $port db finished '
+            echo "update all $port db finished "
         done
 	fi
 fi

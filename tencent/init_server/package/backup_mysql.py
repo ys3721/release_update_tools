@@ -225,7 +225,6 @@ if __name__ == "__main__":
             'backup_path': '/data0/backup/',
             'socks': '/var/lib/mysql/mysql.sock',
             'data': 'data0',
-            #这个是中心服ip 省事儿
             'wanip': '139.199.12.180'
         }
         sc1 = BackupMySQLDB(kwargs)
