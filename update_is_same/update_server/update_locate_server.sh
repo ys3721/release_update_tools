@@ -10,7 +10,7 @@ DEPLOY=true
 
 DB_NAME="wg_lj"
 MYSQL_ROOT_PW="xssx1by"
-DATA_COUNT=`ls -lh / | egrep "data[0-1|5-6]" | wc -l`
+DATA_COUNT=`ls -lh / | egrep "data[0-1|5-6]$" | wc -l`
 
 while getopts "uain" arg
 do
