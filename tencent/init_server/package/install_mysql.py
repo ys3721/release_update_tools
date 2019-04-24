@@ -17,7 +17,7 @@ class MysqlInstaller(object):
 
     def __init__(self, instance_count, user="root", password="123456", game_user='', game_password="",
                  gm_lang_ip="10.10.2.3", gm_user="gmroot", gm_password="12345600",
-                 local_ip1="10.14.1.16", local_ip2="10.10.2.105", local_user="tongji", local_password="tongji1234!@#$"):
+                 local_ip1="119.29.252.93", local_ip2="10.10.2.105", local_user="tongji", local_password="tongji1234!@#$"):
         self.instance_count = instance_count
         self.lan_ip = '127.0.0.1'
         self.user = user
