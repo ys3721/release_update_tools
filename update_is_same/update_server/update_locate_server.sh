@@ -68,8 +68,8 @@ if [ $INIT_SERVER == false ]; then
 
     #强行杀掉
     if [ $game_count -gt 0 ]; then
-        ps -ef | grep java | grep game_server | grep -v 'grep '|awk '{print $2}'|xargs kill
-        sleep 10
+        ps -elf | grep java | grep game_server | grep -v 'grep '|awk '{print $4}'|xargs kill
+        sleep 5
     fi
     game_count=$(ps -elf | grep java | grep game_server | grep -v "grep" | awk '{print $4}' | wc -l)
     if [ $game_count -gt 0 ]; then
@@ -104,8 +104,8 @@ if [ $INIT_SERVER == false ]; then
     done
     #杀掉 -9?
     if [ $log_count -gt 0 ]; then
-        ps -ef | grep java | grep log_server | grep -v 'grep '|awk '{print $2}' |xargs kill
-        sleep 10
+        ps -elf | grep java | grep log_server | grep -v 'grep '|awk '{print $4}' |xargs kill -9
+        sleep 3
     fi
     log_count=$(ps -elf | grep java | grep log_server | grep -v "grep" | awk '{print $4}' | wc -l)
     if [ $log_count -gt 0 ]; then
@@ -127,7 +127,7 @@ if $DEPLOY; then
         if [[ $file =~ "data" ]] && [ $file != "data" ] && [ $file != "data2" ] && [ $file != "data3" ]; then
             echo "/"$file being deploy ....
             cd "/"$file/wg_deploy
-            cp /data0/deploy_current_path.sh ./
+            \cp /data0/deploy_current_path.sh ./
             if [ ! -e deploy_current_path.sh ]; then
                 exit 1
             fi

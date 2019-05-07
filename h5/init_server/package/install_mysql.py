@@ -46,8 +46,8 @@ class MysqlInstaller(object):
         if self.instance_count != 1 and self.instance_count != 2 and self.instance_count != 4:
             print "1 2 4 is ok,  other is not ok!! count=%d" % self.instance_count
             return False
-        if os.path.exists("/data0/mysql") or os.path.exists("/data1/mysql3307") \
-                or os.path.exists("/data5/mysql3308") or os.path.exists("/data6/mysql3309"):
+        if os.path.exists("/data0/mysql") or os.path.exists("/data0/mysql3307") \
+                or os.path.exists("/data0/mysql3308") or os.path.exists("/data0/mysql3309"):
             return False
         if os.path.exists("/var/lib/mysql") or os.path.exists("/var/lib/mysql3307") \
                 or os.path.exists("/var/lib/mysql3308") or os.path.exists("/var/lib/mysql3309"):
@@ -81,20 +81,20 @@ class MysqlInstaller(object):
         os.system('/bin/ln -s %s %s && chown -R mysql.mysql %s' % (data_dir_one, soft_line_data_dir_one, soft_line_data_dir_one))
 
         if self.instance_count >= 2:
-            data_dir_two = '/data1/mysql'
+            data_dir_two = '/data0/mysql3307'
             soft_line_data_dir_two = '/var/lib/mysql3307'
             os.mkdir(data_dir_two)
             os.system('/bin/chown mysql.mysql -R %s' % data_dir_two)
             os.system('/bin/ln -s %s %s && chown -R mysql.mysql %s' % (data_dir_two, soft_line_data_dir_two, soft_line_data_dir_two))
 
         if self.instance_count >= 4:
-            data_dir_three = '/data5/mysql'
+            data_dir_three = '/data0/mysql3308'
             soft_line_data_dir_three = '/var/lib/mysql3308'
             os.mkdir(data_dir_three)
             os.system('/bin/chown mysql.mysql -R %s' % data_dir_three)
             os.system('/bin/ln -s %s %s && chown -R mysql.mysql %s' % (data_dir_three, soft_line_data_dir_three, soft_line_data_dir_three))
 
-            data_dir_four = '/data6/mysql'
+            data_dir_four = '/data0/mysql3309'
             soft_line_data_dir_four = '/var/lib/mysql3309'
             os.mkdir(data_dir_four)
             os.system('/bin/chown mysql.mysql -R %s' % data_dir_four)

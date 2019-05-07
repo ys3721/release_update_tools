@@ -52,7 +52,7 @@ scp *.zip root@$ip:/data1/
 scp *.zip root@$ip:/data5/
 scp *.zip root@$ip:/data6/
 
-sleep 8
+sleep 4
 #executing update script
 ssh root@$ip "sh /data0/update_locate_server.sh $2"
 
