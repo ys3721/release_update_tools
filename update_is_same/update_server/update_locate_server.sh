@@ -163,7 +163,7 @@ if $UPDATE_DB; then
         do
         port=`expr 3305 + $i`
             echo "executing $UPDATE_SQL_FILE for port = $port"
-		    /usr/local/mysql/bin/mysql -uroot -p$MYSQL_ROOT_PW -h127.0.0.1 -P$port wg_lj < $UPDATE_SQL_FILE
+		    /usr/local/mysql/bin/mysql -uroot -p$MYSQL_ROOT_PW -h127.0.0.1 -P$port -s -N -f < $UPDATE_SQL_FILE
 		    #/usr/local/mysql/bin/mysql -uroot -p$MYSQL_ROOT_PW -h127.0.0.1 -P$port -e "source /data0/wg_sql/lj_db_update.sql" -f
             echo "update all $port db finished "
         done
