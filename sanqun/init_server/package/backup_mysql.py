@@ -213,7 +213,7 @@ class BackupMySQLDB(object):
         self.dev_null_chmod()
 
 if __name__ == "__main__":
-    if os.path.isdir("/data0/mysql"):
+    if os.path.isdir("/data0/"):
         kwargs = {
             'user': 'root',
             'pass': '123456',
@@ -231,7 +231,7 @@ if __name__ == "__main__":
         sc1.work()
         print 'data0 is ok!'
         time.sleep(32)
-    if os.path.isdir("/data1/mysql"):
+    if os.path.isdir("/data1/"):
         kwargs2 = {
             'user': 'root',
             'pass': '123456',
@@ -249,7 +249,7 @@ if __name__ == "__main__":
         sc2.work()
         print 'data1 is ok!'
         time.sleep(10)
-    if os.path.isdir("/data5/mysql"):
+    if os.path.isdir("/data5/"):
         kwargs3 = {
             'user': 'root',
             'pass': '123456',
@@ -267,7 +267,7 @@ if __name__ == "__main__":
         sc3.work()
         print 'data5 is ok!'
         time.sleep(16)
-    if os.path.isdir("/data6/mysql"):
+    if os.path.isdir("/data6/"):
         kwargs4 = {
             'user': 'root',
             'pass': '123456',
