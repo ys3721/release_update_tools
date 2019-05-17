@@ -223,7 +223,7 @@ if __name__ == "__main__":
             'rsync_ip2': '119.29.168.33',
             'rsync_model': 'backup',
             'backup_path': '/data0/backup/',
-            'socks': '/var/lib/mysql/mysql.sock',
+            'socks': '3306',
             'data': 'data0',
             'wanip': '111.230.144.107'
         }
@@ -241,7 +241,7 @@ if __name__ == "__main__":
             'rsync_ip2': '119.29.168.33',
             'rsync_model': 'backup',
             'backup_path': '/data0/backup/',
-            'socks': '/var/lib/mysql3307/mysql.sock',
+            'socks': '3307',
             'data': 'data1',
             'wanip': '111.230.144.107'
         }
@@ -259,7 +259,7 @@ if __name__ == "__main__":
             'rsync_ip2': '119.29.168.33',
             'rsync_model': 'backup',
             'backup_path': '/data0/backup/',
-            'socks': '/var/lib/mysql3308/mysql.sock',
+            'socks': '3308',
             'data': 'data5',
             'wanip': '111.230.144.107'
         }
@@ -277,7 +277,7 @@ if __name__ == "__main__":
             'rsync_ip2': '119.29.168.33',
             'rsync_model': 'backup',
             'backup_path': '/data0/backup/',
-            'socks': '/var/lib/mysql3309/mysql.sock',
+            'socks': '3309',
             'data':'data6',
             'wanip': '111.230.144.107'
         }
