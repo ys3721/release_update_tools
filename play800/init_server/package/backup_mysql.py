@@ -159,7 +159,7 @@ class BackupMySQLDB(object):
         os.chmod(rsync_file,stat.S_IREAD+stat.S_IWRITE)
 
         # mysqldump file to /data0/backup/
-        x, y  = COMM("/usr/local/mysql/bin/mysqldump -u%s -p%s -h%s -S %s --single-transaction --opt  %s > %s/%s"\
+        x, y  = COMM("/usr/local/mysql/bin/mysqldump -u%s -p%s -h%s -P%s --single-transaction --opt  %s > %s/%s"\
                 %(self.kwargs['user'],self.kwargs['pass'],self.kwargs['host'], self.kwargs['socks'], self.kwargs['dbname'],self.kwargs['backup_path'],namesql))
         if x != 0:
             mes = ('mysqldump file %s is failure'%namesql)
@@ -213,7 +213,7 @@ class BackupMySQLDB(object):
         self.dev_null_chmod()
 
 if __name__ == "__main__":
-    if os.path.isdir("/data0/mysql"):
+    if os.path.isdir("/data0/"):
         kwargs = {
             'user': 'root',
             'pass': 'xssx1by',
@@ -223,7 +223,7 @@ if __name__ == "__main__":
             'rsync_ip2': '120.92.168.148',
             'rsync_model': 'backup',
             'backup_path': '/data0/backup/',
-            'socks': '/var/lib/mysql/mysql.sock',
+            'socks': '3306',
             'data': 'data0',
             'wanip': '134.175.233.30'
         }
@@ -231,7 +231,7 @@ if __name__ == "__main__":
         sc1.work()
         print 'data0 is ok!'
         time.sleep(32)
-    if os.path.isdir("/data1/mysql"):
+    if os.path.isdir("/data1/"):
         kwargs2 = {
             'user': 'root',
             'pass': 'xssx1by',
@@ -241,7 +241,7 @@ if __name__ == "__main__":
             'rsync_ip2': '120.92.168.148',
             'rsync_model': 'backup',
             'backup_path': '/data0/backup/',
-            'socks': '/var/lib/mysql3307/mysql.sock',
+            'socks': '3307',
             'data': 'data1',
             'wanip': '134.175.233.30'
         }
@@ -249,7 +249,7 @@ if __name__ == "__main__":
         sc2.work()
         print 'data1 is ok!'
         time.sleep(10)
-    if os.path.isdir("/data5/mysql"):
+    if os.path.isdir("/data5/"):
         kwargs3 = {
             'user': 'root',
             'pass': 'xssx1by',
@@ -259,7 +259,7 @@ if __name__ == "__main__":
             'rsync_ip2': '120.92.168.148',
             'rsync_model': 'backup',
             'backup_path': '/data0/backup/',
-            'socks': '/var/lib/mysql3308/mysql.sock',
+            'socks': '3308',
             'data': 'data5',
             'wanip': '134.175.233.30'
         }
@@ -267,7 +267,7 @@ if __name__ == "__main__":
         sc3.work()
         print 'data5 is ok!'
         time.sleep(16)
-    if os.path.isdir("/data6/mysql"):
+    if os.path.isdir("/data6/"):
         kwargs4 = {
             'user': 'root',
             'pass': 'xssx1by',
@@ -277,7 +277,7 @@ if __name__ == "__main__":
             'rsync_ip2': '120.92.168.148',
             'rsync_model': 'backup',
             'backup_path': '/data0/backup/',
-            'socks': '/var/lib/mysql3309/mysql.sock',
+            'socks': '3309',
             'data':'data6',
             'wanip': '134.175.233.30'
         }
