@@ -159,7 +159,7 @@ class BackupMySQLDB(object):
         os.chmod(rsync_file,stat.S_IREAD+stat.S_IWRITE)
 
         # mysqldump file to /data0/backup/
-        x, y  = COMM("/usr/local/mysql/bin/mysqldump -u%s -p%s -h%s -S %s --single-transaction --opt  %s > %s/%s"\
+        x, y  = COMM("/usr/local/mysql/bin/mysqldump -u%s -p%s -h%s -P%s --single-transaction --opt  %s > %s/%s"\
                 %(self.kwargs['user'],self.kwargs['pass'],self.kwargs['host'], self.kwargs['socks'], self.kwargs['dbname'],self.kwargs['backup_path'],namesql))
         if x != 0:
             mes = ('mysqldump file %s is failure'%namesql)
@@ -223,7 +223,7 @@ if __name__ == "__main__":
             'rsync_ip2': '119.29.168.33',
             'rsync_model': 'backup',
             'backup_path': '/data0/backup/',
-            'socks': '/var/lib/mysql/mysql.sock',
+            'socks': '3306',
             'data': 'data0',
             'wanip': '119.29.197.61'
         }
@@ -241,7 +241,7 @@ if __name__ == "__main__":
             'rsync_ip2': '119.29.168.33',
             'rsync_model': 'backup',
             'backup_path': '/data0/backup/',
-            'socks': '/var/lib/mysql3307/mysql.sock',
+            'socks': '3307',
             'data': 'data1',
             'wanip': '119.29.197.61'
         }
@@ -259,7 +259,7 @@ if __name__ == "__main__":
             'rsync_ip2': '119.29.168.33',
             'rsync_model': 'backup',
             'backup_path': '/data0/backup/',
-            'socks': '/var/lib/mysql3308/mysql.sock',
+            'socks': '3308',
             'data': 'data5',
             'wanip': '119.29.197.61'
         }
@@ -277,7 +277,7 @@ if __name__ == "__main__":
             'rsync_ip2': '119.29.168.33',
             'rsync_model': 'backup',
             'backup_path': '/data0/backup/',
-            'socks': '/var/lib/mysql3309/mysql.sock',
+            'socks': '3309',
             'data':'data6',
             'wanip': '119.29.197.61'
         }
