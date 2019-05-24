@@ -21,7 +21,7 @@ stop_mysql()
 {
     export PATH=/usr/local/mysql/bin:$PATH
     ps -elf | grep mysqld | grep -v grep | awk '{print $4}' | xargs kill
-    sleep 20
+    sleep 220
     count=`ps -elf | grep mysqld | grep -v grep | wc -l`
     echo "stop mysql finished!!"$count
     echo `/etc/init.d/mysqld_multi.server report`
@@ -54,7 +54,7 @@ start_mysql()
 {
     export PATH=/usr/local/mysql/bin:$PATH
     /etc/init.d/mysqld_multi.server start
-    sleep 5
+    sleep 25
     echo `/etc/init.d/mysqld_multi.server report`
 }
 
