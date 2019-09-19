@@ -218,7 +218,7 @@ def update_center_server_xml(config_dic_array):
     _game_server_xml_file = open("/data0/wg_center/WEB-INF/classes/gameserver.xml", 'r');
     _content = _game_server_xml_file.read()
     for _config in config_dic_array:
-        if _config["server_name"] in _content:
+        if _config["server_name"]+"-" in _content:
             continue
         _line = """<server ip="%s" port="%s" gameID="%d" serverID="%s"></server>   <!--%s-->""" % \
                 (_config["lan_ip"], _config["telnet_port"], GAME_ID, _config["server_id"], _config["server_name"])
