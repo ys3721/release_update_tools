@@ -162,14 +162,14 @@ class MysqlInstaller(object):
             time.sleep(5)
         else:
             os.system('export PATH=/usr/local/mysql/bin:$PATH && /etc/init.d/mysqld_multi.server start')
-            time.sleep(30)
+            time.sleep(50)
             os.system('export PATH=/usr/local/mysql/bin:$PATH && /etc/init.d/mysqld_multi.server report')
 
     def cron_back_up(self):
         role_cron_file = open("/var/spool/cron/root", "r")
         content = role_cron_file.read()
         if "backup_mysql.py" not in content:
-            rand = random.randint(1,60)
+            rand = random.randint(1,50)
             os.system('echo "%d 04 * * * /usr/bin/python  /data0/backup_mysql.py 2>&1 > /dev/null" >> /var/spool/cron/root' % rand)
 
     def check_and_install(self):
