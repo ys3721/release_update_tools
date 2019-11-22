@@ -208,8 +208,7 @@ if $AUTO_START; then
     do
         if [[ $file =~ "data" ]] && [ $file != "data" ] && [ $file != "data2" ] && [ $file != "data3" ]; then
             echo "/"$file begin start log_server ....
-            cd "/"$file/wg_script
-            sh logserver_launch.sh start
+            cd "/"$file/wg_script && sh "/"$file/wg_script/logserver_launch.sh start
         fi
     done
 	echo "log server started"
@@ -222,8 +221,8 @@ if $AUTO_START; then
     do
         if [[ $file =~ "data" ]] && [ $file != "data" ] && [ $file != "data2" ] && [ $file != "data3" ]; then
             echo "/"$file begin start game_server ....
-            cd "/"$file/wg_script
-            sh gameserver_launch.sh start
+            cd "/"$file/wg_script && sh "/"$file/wg_script/gameserver_launch.sh start
+
         fi
     done
     sleep 5
