@@ -1,3 +1,4 @@
+# @Auther: Yao Shuai
 #!/bin/bash
 
 . /etc/init.d/functions
@@ -19,7 +20,7 @@ merge_conf_file="${basepath}/merge_conf/merge.properties"
 dos2unix ${merge_conf_file} >/dev/null 2>&1
 
 var=`awk -F "=" '/svrIp/{print $2}' /data3/merge/merge_conf/merge.properties`
-var=${var//:*,/ }    #这里是将var中的,替换为空格
+var=${var//:330?,/ }    #这里是将var中的,替换330x为空格
 var=${var//:*/ }    #这里是将var中的,替换为空格
 
 

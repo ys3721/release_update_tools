@@ -1,0 +1,41 @@
+
+/usr/local/mysql/bin/mysql -uroot -h127.0.0.1 -P3307 -e "grant select on *.* to 'tongji'@'10.10.2.105' identified by 'tongji1234\!@#$';"
+/usr/local/mysql/bin/mysql -uroot -h127.0.0.1 -P3307 -e "grant select on *.* to 'tongji'@'10.14.1.16' identified by 'tongji1234\!@#$';"
+/usr/local/mysql/bin/mysql -uroot -h127.0.0.1 -P3307 -e "grant all privileges on *.* to 'gmroot'@'10.10.9.103' identified by 'M4BsaVivm2XI';"
+/usr/local/mysql/bin/mysql -uroot -h127.0.0.1 -P3307 -e "grant all privileges on *.* to 'sgqyh5'@'127.0.0.1' identified by 'mRYsETp5U3xh';"
+/usr/local/mysql/bin/mysql -uroot -h127.0.0.1 -P3307 -e "grant all privileges on *.* to 'root'@'127.0.0.1' identified by 'xssx1by';"
+
+
+/usr/local/mysql/bin/mysql -uroot -h127.0.0.1 -P3308 -e "grant select on *.* to 'tongji'@'10.10.2.105' identified by 'tongji1234\!@#$';"
+/usr/local/mysql/bin/mysql -uroot -h127.0.0.1 -P3308 -e "grant select on *.* to 'tongji'@'10.14.1.16' identified by 'tongji1234\!@#$';"
+/usr/local/mysql/bin/mysql -uroot -h127.0.0.1 -P3308 -e "grant all privileges on *.* to 'gmroot'@'10.10.9.103' identified by 'M4BsaVivm2XI';"
+/usr/local/mysql/bin/mysql -uroot -h127.0.0.1 -P3308 -e "grant all privileges on *.* to 'sgqyh5'@'127.0.0.1' identified by 'mRYsETp5U3xh';"
+/usr/local/mysql/bin/mysql -uroot -h127.0.0.1 -P3308 -e "grant all privileges on *.* to 'root'@'127.0.0.1' identified by 'xssx1by';"
+
+
+
+/usr/local/mysql/bin/mysql -uroot -h127.0.0.1 -P3309 -e "grant select on *.* to 'tongji'@'10.10.2.105' identified by 'tongji1234\!@#$';"
+/usr/local/mysql/bin/mysql -uroot -h127.0.0.1 -P3309 -e "grant select on *.* to 'tongji'@'10.14.1.16' identified by 'tongji1234\!@#$';"
+/usr/local/mysql/bin/mysql -uroot -h127.0.0.1 -P3309 -e "grant all privileges on *.* to 'gmroot'@'10.10.9.103' identified by 'M4BsaVivm2XI';"
+/usr/local/mysql/bin/mysql -uroot -h127.0.0.1 -P3309 -e "grant all privileges on *.* to 'sgqyh5'@'127.0.0.1' identified by 'mRYsETp5U3xh';"
+/usr/local/mysql/bin/mysql -uroot -h127.0.0.1 -P3309 -e "grant all privileges on *.* to 'root'@'127.0.0.1' identified by 'xssx1by';"
+
+
+CREATE DATABASE `wg_lj_log` DEFAULT CHARACTER SET utf8  COLLATE utf8_general_ci;
+USE `wg_lj_log`;
+
+-- ----------------------------
+-- 日志库,注意
+-- ----------------------------
+DROP TABLE IF EXISTS `reason_list`;
+CREATE TABLE `reason_list` (
+  `log_uid` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `log_type` int(10) unsigned NOT NULL,
+  `log_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `log_table` varchar(32) NOT NULL,
+  `log_desc` varchar(128) NOT NULL,
+  `log_field` varchar(32) NOT NULL,
+  `reason` int(10) NOT NULL,
+  `reason_name` varchar(128) NOT NULL,
+  PRIMARY KEY (`log_uid`)
+) ENGINE=InnoDB AUTO_INCREMENT=557 DEFAULT CHARSET=utf8;
