@@ -154,7 +154,7 @@ done
 #whatever update the log reason sql
 for reason_index in `seq $DATA_COUNT`
 do
-    port=`expr 3305 + $j`
+    port=`expr 3305 + $reason_index`
     echo 'update log reason '+ $DB_LOG_REASONSQL_FILE
     /usr/local/mysql/bin/mysql -uroot -p$MYSQL_ROOT_PW -h127.0.0.1 -P$port < $DB_LOG_REASONSQL_FILE
 done
