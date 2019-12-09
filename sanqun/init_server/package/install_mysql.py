@@ -142,13 +142,13 @@ class MysqlInstaller(object):
                 select_info_with_port = (port,) + select_info
                 print "/usr/local/mysql/bin/mysql -uroot -h127.0.0.1 -P%d -e \"grant select on *.* to '%s'@'%s' identified by '%s';\"" % select_info_with_port
                 os.system("/usr/local/mysql/bin/mysql -uroot -h127.0.0.1 -P%d -e \"grant select on *.* to '%s'@'%s' identified by '%s';\"" % select_info_with_port)
-                time.sleep(1)
+                time.sleep(3)
             for insert_info in self.grant_all_info:
                 if insert_info[0] != "":
                     insert_info_with_port = (port,) + insert_info
                     print "/usr/local/mysql/bin/mysql -uroot -h127.0.0.1 -P%d -e \"grant all privileges on *.* to '%s'@'%s' identified by '%s';\"" % insert_info_with_port
                     os.system("/usr/local/mysql/bin/mysql -uroot -h127.0.0.1 -P%d -e \"grant all privileges on *.* to '%s'@'%s' identified by '%s';\"" % insert_info_with_port)
-                    time.sleep(1)
+                    time.sleep(2)
             # 清除空用户
             os.system("/usr/local/mysql/bin/mysql -uroot -p%s -h127.0.0.1 -P%d -e \"delete from mysql.user where password='';\"" % (self.password, port))
             os.system("/usr/local/mysql/bin/mysql -uroot -p%s -h127.0.0.1 -P%d -e \"flush privileges;\"" % (self.password, port))
