@@ -102,13 +102,19 @@ def install_new_server():
     for key, value in new_server_contain.items():
         # lamda 表达式的 排序实现
         value.sort(lambda s1, s2: cmp(s1.target_mysql_port, s2.target_mysql_port))
+        server_param = ""
         for server in value:
-            print server.server_name_pre
-        print
+            server_param += " "+server.server_name_pre
+            os.system("cd /data3/init_server/ && python add_some_server.py %s" % server_param)
 
+def fill_sql_to_mysql():
+    for server in servers:
+        print server.server_name_pre
+
+        
 read_excel()
 del_center_server_config()
 modify_server_txt()
 copy_dump_sql()
 install_new_server()
-
+fill_sql_to_mysql()
