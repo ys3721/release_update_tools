@@ -7,15 +7,20 @@ import logging
 import xlrd, os, time
 from server_info import MoveServerInfo
 
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-logger = logging.getLogger("copy_sql")
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s-%(name)s-%(levelname)s[%(message)s]')
+logger = logging.getLogger("move_sever")
 logger.setLevel(logging.DEBUG)
+
+RED ='\033[1;31m%s\033[0m'
+PINK ='\033[1;35m%s\033[0m'
+GREEN ='\033[1;32m%s\033[0m'
 
 file_name = './moveserver.xlsx'
 center_config_path = '/data0/wg_center/WEB-INF/classes/'
 data2_server_path = '/data2/servers/'
 
 password = raw_input("请输入服务器的root密码！>")
+mysql_pw = raw_input("请输mysql数据库的密码！> ")
 servers = []
 
 
@@ -28,7 +33,7 @@ def read_excel():
     print row_size
     #不要头
     for i in range(1, row_size):
-        row_cells = sheet0.row_values(i);
+        row_cells = sheet0.row_values(i)
         server_name_pre = str(row_cells[0]).lower()
         server_name = row_cells[1].encode("utf-8")
         serverId = int(row_cells[2])
@@ -46,8 +51,12 @@ def read_excel():
         servers.append(server_info)
 
     for i in range(0, len(servers)):
-        if logger.isEnabledFor(logging.DEBUG):
-            logger.debug(servers[i].server_name_pre)
+        if logger.isEnabledFor(logging.INFO):
+            logger.info(PINK % ("将要把%s从%s的%s端口移动到%s的%s端口，请确认!" %
+                                (servers[i].server_name_pre, servers[i].before_lan_ip, servers[i].before_mysql_port, servers[i].target_lan_ip, servers[i].target_mysql_port)))
+    confirm = raw_input("yes OR no ?")
+    if confirm != "yes":
+        exit(-1)
 
 
 def copy_dump_sql():
@@ -88,7 +97,7 @@ def is_line_contain_server(line):
     for i in range(0, len(servers)):
         server = servers[i]
         if '"'+server.before_lan_ip+'"' in line:
-            logger.debug('"'+server.before_lan_ip+'"' + "is in line will delete!!!")
+            logger.debug('"'+server.before_lan_ip+'"' + "is in line will delete!!!!!!!!")
             return True
     return False
 
@@ -108,7 +117,7 @@ def modify_server_txt():
             logger.error(server.server_name_pre + "not exist!!")
 
 
-def install_new_server():
+def inst11all_new_server():
     new_server_contain = {}
     for server in servers:
         if server.target_lan_ip not in new_server_contain.keys():
@@ -128,12 +137,32 @@ def install_new_server():
 
 def fill_sql_to_mysql():
     for server in servers:
-        print server.server_name_pre
+        find_target_init_sql_cmd = "sshpass -p %s ssh root@%s ls /data0/src/%s_*.sql" % (password, server.target_lan_ip, server.server_name_pre)
+        sql_file_full_path = os.popen(find_target_init_sql_cmd).readline()
+        input_sql_cmd = "sshpass -p %s ssh root@%s /usr/local/mysql/bin/mysql -uroot -p%s -h127.0.0.1 -P%s wg_lj < %s " \
+                        % (password, server.target_lan_ip, password, server.target_mysql_port, sql_file_full_path)
+        logger.info("Begin to dump sql to the mysql! cmd is = " + input_sql_cmd)
+        #os.system(input_sql_cmd)
 
-        
-read_excel()
-del_center_server_config()
-modify_server_txt()
-copy_dump_sql()
-#install_new_server()
-#fill_sql_to_mysql()
+
+def check_safe():
+    for server in servers:
+        ps_count_cmd = "sshpass -p %s ssh root@%s ps -elf | grep java | grep -v grep | wc -l" % (password, server.before_lan_ip)
+        ps_count = int(os.popen(ps_count_cmd).readline())
+        if ps_count > 0:
+            logger.error("\033[1;31mERROR! Source server not stop! \033[0m" + server.server_name_pre)
+            exit(-1)
+        target_server_blank_cmd = "sshpass -p %s ssh root@%s ls /data0/mysql | wc -l" % (password, server.before_lan_ip)
+        mysql_count = int(os.popen(target_server_blank_cmd).readline())
+        if mysql_count > 0:
+            logger.error("\033[1;31mERROR! Target server have mysql!!! \033[0m" + server.server_name_pre)
+            exit(-1)
+
+
+if __name__ == '__main__':
+    read_excel()
+    check_safe()
+#    del_center_server_config()
+#    modify_server_txt()
+#    copy_dump_sql()
+#    fill_sql_to_mysql()
