@@ -24,6 +24,20 @@ mysql_pw = raw_input("请输mysql数据库的密码！> ")
 servers = []
 
 
+def auth_server(lang_ip):
+    no_host_check_cmd = 'sshpass -p "%s" ssh %s -o StrictHostKeyChecking=no ls' % (password, lang_ip)
+    logger.info('execute -------------------> ' + no_host_check_cmd)
+    os.system(no_host_check_cmd)
+    mk_ssh_dir_cmd = 'sshpass -p "%s" ssh %s mkdir -p .ssh' % (password, lang_ip)
+    logger.info('execute--------------> ' + mk_ssh_dir_cmd)
+    os.system(mk_ssh_dir_cmd)
+    if not os.path.isfile('/root/.ssh/id_rsa.pub'):
+        os.system("""ssh-keygen -t rsa -C ys3721@hotmail.com -f /root/.ssh/id_rsa -P """"")
+    authorize_cmd = """cat ~/.ssh/id_rsa.pub | sshpass -p "%s" ssh root@%s 'cat >> .ssh/authorized_keys'""" % (password, lang_ip)
+    logger.info('execute--> ' + authorize_cmd)
+    os.system(authorize_cmd)
+
+
 def read_excel():
     """读玉照给的xlsx然后把sql自动烤了吧"""
     wb = xlrd.open_workbook(filename=file_name)
@@ -117,7 +131,7 @@ def modify_server_txt():
             logger.error(server.server_name_pre + "not exist!!")
 
 
-def inst11all_new_server():
+def install_new_server():
     new_server_contain = {}
     for server in servers:
         if server.target_lan_ip not in new_server_contain.keys():
@@ -132,17 +146,19 @@ def inst11all_new_server():
         for server in value:
             server_param += " "+server.server_name_pre
         logger.info("Begin install new server ---> cpython add_some_server.py %s" % server_param)
-        #os.system("cd /data3/init_server/ && python add_some_server.py %s" % server_param)
+        os.system("cd /data3/init_server/ && python add_some_server.py %s" % server_param)
 
 
 def fill_sql_to_mysql():
+    """This place needs to stop the newly deployed target server first, because if you don't stho the server
+    SQL will be overwritten."""
     for server in servers:
         find_target_init_sql_cmd = "sshpass -p %s ssh root@%s ls /data0/src/%s_*.sql" % (password, server.target_lan_ip, server.server_name_pre)
         sql_file_full_path = os.popen(find_target_init_sql_cmd).readline()
         input_sql_cmd = "sshpass -p %s ssh root@%s /usr/local/mysql/bin/mysql -uroot -p%s -h127.0.0.1 -P%s wg_lj < %s " \
                         % (password, server.target_lan_ip, password, server.target_mysql_port, sql_file_full_path)
         logger.info("Begin to dump sql to the mysql! cmd is = " + input_sql_cmd)
-        #os.system(input_sql_cmd)
+        os.system(input_sql_cmd)
 
 
 def check_safe():
@@ -152,7 +168,7 @@ def check_safe():
         if ps_count > 0:
             logger.error("\033[1;31mERROR! Source server not stop! \033[0m" + server.server_name_pre)
             exit(-1)
-        target_server_blank_cmd = "sshpass -p %s ssh root@%s ls /data0/mysql | wc -l" % (password, server.before_lan_ip)
+        target_server_blank_cmd = "sshpass -p %s ssh root@%s ls /var/lib/ | grep mysql | wc -l" % (password, server.target_lan_ip)
         mysql_count = int(os.popen(target_server_blank_cmd).readline())
         if mysql_count > 0:
             logger.error("\033[1;31mERROR! Target server have mysql!!! \033[0m" + server.server_name_pre)
@@ -162,7 +178,8 @@ def check_safe():
 if __name__ == '__main__':
     read_excel()
     check_safe()
-#    del_center_server_config()
-#    modify_server_txt()
-#    copy_dump_sql()
-#    fill_sql_to_mysql()
+    del_center_server_config()
+    modify_server_txt()
+    install_new_server()
+    copy_dump_sql()
+    fill_sql_to_mysql()

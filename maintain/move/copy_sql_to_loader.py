@@ -15,6 +15,21 @@ from_name = ''
 from_port = ''
 password = ''
 
+
+def auth_server(lang_ip):
+    no_host_check_cmd = 'sshpass -p "%s" ssh %s -o StrictHostKeyChecking=no ls' % (password, lang_ip)
+    logger.info('execute -------------------> ' + no_host_check_cmd)
+    os.system(no_host_check_cmd)
+    mk_ssh_dir_cmd = 'sshpass -p "%s" ssh %s mkdir -p .ssh' % (password, lang_ip)
+    logger.info('execute--------------> ' + mk_ssh_dir_cmd)
+    os.system(mk_ssh_dir_cmd)
+    if not os.path.isfile('/root/.ssh/id_rsa.pub'):
+        os.system('ssh-keygen -t rsa -C ys3721@hotmail.com -f /root/.ssh/id_rsa -P ""')
+    authorize_cmd = """cat ~/.ssh/id_rsa.pub | sshpass -p "%s" ssh root@%s 'cat >> .ssh/authorized_keys'""" % (password, lang_ip)
+    logger.info('execute--> ' + authorize_cmd)
+    os.system(authorize_cmd)
+
+
 try:
     opts, args = getopt.getopt(argv[1:], "ht:n:p:P:", ["help", "targetIp=", "serverName=", "port=", "password="])
 except getopt.GetoptError:
@@ -49,7 +64,8 @@ for folderName, subfolders, filenames in os.walk('/data0/sql_bak/'):
             if data_stamp > newest_file_data:
                 newest_file_data = data_stamp
 
+auth_server(to_ip)
 newest_file_name = "/data0/sql_bak/" + str(newest_file_data) + "_"+str(from_port)+".sql"
 logger.debug("I will copy newest file to server, file=" + newest_file_name)
-os.system("echo scp %s root@%s:/data0/src/%s" % (newest_file_name, to_ip, from_name+"_"+str(newest_file_data))+"_"+str(from_port)+".sql")
+os.system("echo sshpass -p %s scp %s root@%s:/data0/src/%s" % (password, newest_file_name, to_ip, from_name+"_"+str(newest_file_data))+"_"+str(from_port)+".sql")
 os.system("sshpass -p %s scp %s root@%s:/data0/src/%s" % (password, newest_file_name, to_ip, from_name+"_"+str(newest_file_data))+"_"+str(from_port)+".sql")
