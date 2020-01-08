@@ -2,9 +2,11 @@
 # -*-coding=utf8-*-
 # @Auther: Yao Shuai
 
-from sys import argv
 import logging
-import xlrd, os, time
+import os
+import time
+import xlrd
+
 from server_info import MoveServerInfo
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s-%(name)s-%(levelname)s[%(message)s]')
@@ -32,8 +34,9 @@ def auth_server(lang_ip):
     logger.info('execute--------------> ' + mk_ssh_dir_cmd)
     os.system(mk_ssh_dir_cmd)
     if not os.path.isfile('/root/.ssh/id_rsa.pub'):
-        os.system("""ssh-keygen -t rsa -C ys3721@hotmail.com -f /root/.ssh/id_rsa -P """"")
-    authorize_cmd = """cat ~/.ssh/id_rsa.pub | sshpass -p "%s" ssh root@%s 'cat >> .ssh/authorized_keys'""" % (password, lang_ip)
+        os.system('ssh-keygen -t rsa -C ys3721@hotmail.com -f /root/.ssh/id_rsa -P ""')
+    authorize_cmd = """cat ~/.ssh/id_rsa.pub | sshpass -p "%s" ssh root@%s 'cat >> .ssh/authorized_keys'""" % (
+    password, lang_ip)
     logger.info('execute--> ' + authorize_cmd)
     os.system(authorize_cmd)
 
