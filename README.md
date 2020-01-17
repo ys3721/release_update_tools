@@ -1,3 +1,5 @@
-# "release_update_tools" 一些顺手写的小工具。用来维护游戏服务。
-包括发布更新游戏jar包，部署游戏服务器，迁移游戏服务器等等操作。
-其中大部分是调用linux系统命令。和一些简单的逻辑。
+# "release_update_tools" Some hand-written scripts. Used to maintain game servers.
++Update release game package
++Install multiple mysql instances,initialize previleges.
++Install jdk mysql,deploy game servers.
++Migrate game servers and more.
