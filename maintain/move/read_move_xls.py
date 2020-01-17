@@ -156,21 +156,25 @@ def fill_sql_to_mysql():
     """This place needs to stop the newly deployed target server first, because if you don't stho the server
     SQL will be overwritten."""
     for server in servers:
-        find_target_init_sql_cmd = "sshpass -p %s ssh root@%s ls /data0/src/%s_*.sql" % (password, server.target_lan_ip, server.server_name_pre)
+        stop_server_cmd = "sshpass -p %s ssh root@%s 'sh /data0/update_locate_server.sh'" % (password, server.target_lan_ip)
+        os.system(stop_server_cmd)
+        find_target_init_sql_cmd = "sshpass -p %s ssh root@%s 'ls /data0/src/%s_*.sql'" % (password, server.target_lan_ip, server.server_name_pre)
         sql_file_full_path = os.popen(find_target_init_sql_cmd).readline()
-        input_sql_cmd = "sshpass -p %s ssh root@%s /usr/local/mysql/bin/mysql -uroot -p%s -h127.0.0.1 -P%s wg_lj < %s " \
-                        % (password, server.target_lan_ip, password, server.target_mysql_port, sql_file_full_path)
+        input_sql_cmd = "sshpass -p %s ssh root@%s '/usr/local/mysql/bin/mysql -uroot -p%s -h127.0.0.1 -P%s wg_lj < %s' " \
+                        % (password, server.target_lan_ip, mysql_pw, server.target_mysql_port, sql_file_full_path)
         logger.info("Begin to dump sql to the mysql! cmd is = " + input_sql_cmd)
         os.system(input_sql_cmd)
 
 
 def check_safe():
     for server in servers:
-        ps_count_cmd = "sshpass -p %s ssh root@%s ps -elf | grep java | grep -v grep | wc -l" % (password, server.before_lan_ip)
+        ps_count_cmd = "ssh root@%s 'ps -elf | grep java | grep -v grep | wc -l'" % (server.before_lan_ip)
         ps_count = int(os.popen(ps_count_cmd).readline())
         if ps_count > 0:
             logger.error("\033[1;31mERROR! Source server not stop! \033[0m" + server.server_name_pre)
             exit(-1)
+        no_host_check_cmd = 'sshpass -p "%s" ssh %s -o StrictHostKeyChecking=no ls' % (password, server.target_lan_ip)
+        os.system(no_host_check_cmd)
         target_server_blank_cmd = "sshpass -p %s ssh root@%s ls /var/lib/ | grep mysql | wc -l" % (password, server.target_lan_ip)
         mysql_count = int(os.popen(target_server_blank_cmd).readline())
         if mysql_count > 0:
@@ -181,8 +185,8 @@ def check_safe():
 if __name__ == '__main__':
     read_excel()
     check_safe()
-    del_center_server_config()
-    modify_server_txt()
-    install_new_server()
-    copy_dump_sql()
-    fill_sql_to_mysql()
+    #del_center_server_config()
+    #modify_server_txt()
+    #install_new_server()
+    #copy_dump_sql()
+    #fill_sql_to_mysql()
