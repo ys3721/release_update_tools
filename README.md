@@ -1,5 +1,6 @@
-"# release_update_tools" 一些顺手写的小工具。
-我发现github上面中文点资源库价值都比较低。
-
-
-
+# "release_update_tools" 
+## Some hand-written scripts. Used to maintain game servers.
++ Update release game package
++ Install multiple mysql instances,initialize previleges.
++ Install jdk mysql,deploy game servers.
++ Migrate game servers and more.
