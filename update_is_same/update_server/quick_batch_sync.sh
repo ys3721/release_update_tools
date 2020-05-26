@@ -1,5 +1,14 @@
 a=`java -jar ./batchserver.jar ${@:2}`
 
+ehco 1 > /data3/update_server/maintain.state
+while getopts "a" args
+do
+  case $arg in
+  a)
+    echo 0 > /data3/update_server/maintain.state
+    ;;
+  esac
+done
 echo "all servers list:"
 for i in $a
 do
