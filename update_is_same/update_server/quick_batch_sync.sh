@@ -2,7 +2,7 @@ a=`java -jar ./batchserver.jar ${@:2}`
 
 echo "all servers list:"
 for i in $a
-do 
+do
     if [ -f /data2/servers/$i.config ]
     then
         echo "$i"
@@ -41,17 +41,17 @@ fi
 
 ran_ips=""
 for i in $a
-do	
+do
 	if test -f "/data2/servers/${i}.config"; then
 	    ip=`cat /data2/servers/${i}.config | awk '{print $4}'`
-        if [[ $ran_ips =~ _${ip}_ ]]; then
+        if [[ ${ran_ips} =~ _${ip}_ ]]; then
             echo "executing then ip = $ip sync.sh $i $1 > logs/*_update_${ip}.log"
             continue
         fi
 		echo "executing for ip = $ip sync.sh $i $1 > logs/${i}_update_${ip}.log"
-		sh sync_and_update.sh $i $1 > logs/${i}_update_${ip}.log 2>&1 &
+        sh sync_and_update.sh $i $1 > logs/${i}_update_${ip}.log 2>&1 &
 		ran_ips=$ran_ips"_"$ip"_"
-	else 
+	else
 		continue;
 	fi
 done
