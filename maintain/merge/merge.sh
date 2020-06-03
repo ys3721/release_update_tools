@@ -1,5 +1,5 @@
-# @Auther: Yao Shuai
 #!/bin/bash
+# @Auther: Yao Shuai
 
 . /etc/init.d/functions
 
