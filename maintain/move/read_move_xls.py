@@ -135,6 +135,8 @@ def modify_server_txt():
 
 
 def install_new_server():
+    # 先清一下 如果有卡住的pid会影响新建服务器
+    os.system("rm -rf /data3/update_server/pids/*")
     new_server_contain = {}
     for server in servers:
         if server.target_lan_ip not in new_server_contain.keys():
@@ -185,8 +187,8 @@ def check_safe():
 if __name__ == '__main__':
     read_excel()
     check_safe()
-    #del_center_server_config()
-    #modify_server_txt()
-    #install_new_server()
-    #copy_dump_sql()
-    #fill_sql_to_mysql()
+    del_center_server_config()
+    modify_server_txt()
+    install_new_server()
+    copy_dump_sql()
+    fill_sql_to_mysql()
