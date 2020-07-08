@@ -54,12 +54,12 @@ def read_excel():
         server_name_pre = str(row_cells[0]).lower()
         server_name = row_cells[1].encode("utf-8")
         serverId = int(row_cells[2])
-        before_wan_ip = str(row_cells[3])
-        before_lan_ip = str(row_cells[4])
+        before_wan_ip = row_cells[3].encode("utf-8").strip()
+        before_lan_ip = row_cells[4].encode("utf-8").strip()
         before_mysql_port = int(row_cells[5])
         before_conn_port = int(row_cells[6])
-        target_wan_ip = str(row_cells[7])
-        target_lan_ip = str(row_cells[8])
+        target_wan_ip = row_cells[7].encode("utf-8").strip()
+        target_lan_ip = row_cells[8].encode("utf-8").strip()
         target_mysql_port = int(row_cells[9])
         target_conn_port = int(row_cells[10])
 
@@ -145,17 +145,17 @@ def install_new_server():
         else:
             new_server_contain[server.target_lan_ip].append(server)
     for key, value in new_server_contain.items():
-        # lamda 表达式的 排序实现
+        # lambda 表达式的 排序实现
         value.sort(lambda s1, s2: cmp(s1.target_mysql_port, s2.target_mysql_port))
         server_param = ""
         for server in value:
             server_param += " "+server.server_name_pre
-        logger.info("Begin install new server ---> cpython add_some_server.py %s" % server_param)
-        os.system("cd /data3/init_server/ && python add_some_server.py %s" % server_param)
+        logger.info("Begin install new server ---> python add_some_server_no_block.py %s" % (server_param + " " + password))
+        os.system("cd /data3/init_server/ && python add_some_server_no_block.py %s" % (server_param + " " + password))
 
 
 def fill_sql_to_mysql():
-    """This place needs to stop the newly deployed target server first, because if you don't stho the server
+    """This place needs to stop the newly deployed target server first, because if you don't stop the server
     SQL will be overwritten."""
     for server in servers:
         stop_server_cmd = "sshpass -p %s ssh root@%s 'sh /data0/update_locate_server.sh'" % (password, server.target_lan_ip)
