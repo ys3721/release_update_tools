@@ -7,4 +7,4 @@ sshpass -p $password ssh root@49.51.36.190 "rm -f /data0/wg_release_branch*.zip&
 echo rm ok
 
 sshpass -p $password scp /data0/wg_ftp/server_release/zh_CN/package/1.21.0.0/wg_release_branch*.zip root@49.51.36.190:/data0/
-sshpass -p $password ssh root@49.51.36.190 "cp /data0/wg_release_branch*.zip /data1/&&cp /data0/wg_release_branch*.zip /data5/&&cp /data0/wg_release_branch*.zip /data5/&&cd /data0&&sh update_locate_server.sh -ua"
+sshpass -p $password ssh root@49.51.36.190 "cp /data0/wg_release_branch*.zip /data1/&&cp /data0/wg_release_branch*.zip /data5/&&cp /data0/wg_release_branch*.zip /data6/&&cd /data0&&sh update_locate_server.sh -ua"
