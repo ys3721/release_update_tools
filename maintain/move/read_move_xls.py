@@ -113,7 +113,7 @@ def is_line_contain_server(line):
         return False
     for i in range(0, len(servers)):
         server = servers[i]
-        if '"'+server.before_lan_ip+'"' in line:
+        if '"'+server.before_lan_ip+'"' in line and '"'+server.serverId+'"' in line:
             logger.debug('"'+server.before_lan_ip+'"' + "is in line will delete!!!!!!!!")
             return True
     return False
