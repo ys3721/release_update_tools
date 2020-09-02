@@ -1,0 +1,52 @@
+2020-09-02 12:03:35.168‖‖ERROR‖Application startup failed
+org.yaml.snakeyaml.scanner.ScannerException: while scanning an alias
+ in 'reader', line 5, column 12:
+      monitor: */3 * * * ?
+               ^
+expected alphabetic or numeric character, but found /
+ in 'reader', line 5, column 13:
+      monitor: */3 * * * ?
+                ^
+
+	at org.yaml.snakeyaml.scanner.ScannerImpl.scanAnchor(ScannerImpl.java:1439)
+	at org.yaml.snakeyaml.scanner.ScannerImpl.fetchAlias(ScannerImpl.java:918)
+	at org.yaml.snakeyaml.scanner.ScannerImpl.fetchMoreTokens(ScannerImpl.java:366)
+	at org.yaml.snakeyaml.scanner.ScannerImpl.checkToken(ScannerImpl.java:226)
+	at org.yaml.snakeyaml.parser.ParserImpl$ParseBlockMappingValue.produce(ParserImpl.java:585)
+	at org.yaml.snakeyaml.parser.ParserImpl.peekEvent(ParserImpl.java:157)
+	at org.yaml.snakeyaml.parser.ParserImpl.checkEvent(ParserImpl.java:147)
+	at org.yaml.snakeyaml.composer.Composer.composeNode(Composer.java:132)
+	at org.yaml.snakeyaml.composer.Composer.composeValueNode(Composer.java:246)
+	at org.yaml.snakeyaml.composer.Composer.composeMappingChildren(Composer.java:237)
+	at org.yaml.snakeyaml.composer.Composer.composeMappingNode(Composer.java:225)
+	at org.yaml.snakeyaml.composer.Composer.composeNode(Composer.java:155)
+	at org.yaml.snakeyaml.composer.Composer.composeValueNode(Composer.java:246)
+	at org.yaml.snakeyaml.composer.Composer.composeMappingChildren(Composer.java:237)
+	at org.yaml.snakeyaml.composer.Composer.composeMappingNode(Composer.java:225)
+	at org.yaml.snakeyaml.composer.Composer.composeNode(Composer.java:155)
+	at org.yaml.snakeyaml.composer.Composer.composeDocument(Composer.java:122)
+	at org.yaml.snakeyaml.composer.Composer.getNode(Composer.java:84)
+	at org.yaml.snakeyaml.constructor.BaseConstructor.getData(BaseConstructor.java:104)
+	at org.yaml.snakeyaml.Yaml$1.next(Yaml.java:471)
+	at org.springframework.beans.factory.config.YamlProcessor.process(YamlProcessor.java:160)
+	at org.springframework.beans.factory.config.YamlProcessor.process(YamlProcessor.java:138)
+	at org.springframework.boot.env.YamlPropertySourceLoader$Processor.process(YamlPropertySourceLoader.java:101)
+	at org.springframework.boot.env.YamlPropertySourceLoader.load(YamlPropertySourceLoader.java:58)
+	at org.springframework.boot.env.PropertySourcesLoader.load(PropertySourcesLoader.java:127)
+	at org.springframework.boot.context.config.ConfigFileApplicationListener$Loader.loadIntoGroup(ConfigFileApplicationListener.java:472)
+	at org.springframework.boot.context.config.ConfigFileApplicationListener$Loader.load(ConfigFileApplicationListener.java:459)
+	at org.springframework.boot.context.config.ConfigFileApplicationListener$Loader.load(ConfigFileApplicationListener.java:380)
+	at org.springframework.boot.context.config.ConfigFileApplicationListener.addPropertySources(ConfigFileApplicationListener.java:215)
+	at org.springframework.boot.context.config.ConfigFileApplicationListener.postProcessEnvironment(ConfigFileApplicationListener.java:184)
+	at org.springframework.boot.context.config.ConfigFileApplicationListener.onApplicationEnvironmentPreparedEvent(ConfigFileApplicationListener.java:171)
+	at org.springframework.boot.context.config.ConfigFileApplicationListener.onApplicationEvent(ConfigFileApplicationListener.java:157)
+	at org.springframework.context.event.SimpleApplicationEventMulticaster.invokeListener(SimpleApplicationEventMulticaster.java:167)
+	at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:139)
+	at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:122)
+	at org.springframework.boot.context.event.EventPublishingRunListener.environmentPrepared(EventPublishingRunListener.java:73)
+	at org.springframework.boot.SpringApplicationRunListeners.environmentPrepared(SpringApplicationRunListeners.java:54)
+	at org.springframework.boot.SpringApplication.prepareEnvironment(SpringApplication.java:336)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:307)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1162)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1151)
+	at com.kaixin.packages.Start.main(Start.java:23)
