@@ -1,0 +1,7 @@
+server:
+  port: 8081
+
+scheduling:
+  monitor: 0 */1 * * * ?
+  filePath: D:\file
+  webhook: https://www.feishu.cn/flow/api/trigger-webhook/f172ddd06840292d541a4aff3f5e192d , https://www.feishu.cn/flow/api/trigger-webhook/f172ddd06840292d541a4aff3f5e192d
