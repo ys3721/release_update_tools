@@ -34,7 +34,7 @@ public class MinitorCompoent {
         Map<String,String> fileList = getFileList(filePareant,platmName);
         for(String keyIp : fileList.keySet().toArray(new String[0])) {
             String path = fileList.get(keyIp);
-            int totalValue = requestByIpAndWorkDir(keyIp, path);
+            int totalValue = requestByIpAndWorkDir(keyIp.substring(0,keyIp.length()-4), path);
             if(totalValue == 0){
                 for(String web : webHook) {
                     String data = JSON.toJSONString(new CustomBotReq("服务器进程日志异常","请检查 "+keyIp+" 下 "+path+"所属进程"));
@@ -94,9 +94,8 @@ public class MinitorCompoent {
                 "}";
         String x = doPost("http://106.52.90.51:8308/_search",
                 reqBean,"POST");
-        System.out.println(x);
+        logger.info( ip + "   " + workDir + "ES汇报   " + x);
         EsResultBean parse = JSONObject.parseObject(x, EsResultBean.class);
-        System.out.println(parse.getHits().getTotal().getValue());
         return parse.getHits().getTotal().getValue();
     }
 

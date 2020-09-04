@@ -1,11 +1,10 @@
 package com.kaixin.packages.util;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.LineIterator;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.io.SAXReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -14,6 +13,9 @@ import java.net.URL;
 import java.util.*;
 
 public class AllUtil {
+
+    private final static Logger logger = LoggerFactory.getLogger(AllUtil.class);
+
     public static String doPost(String httpUrl, String param,String method) {
         HttpURLConnection connection = null;
         InputStream is = null;
@@ -92,30 +94,32 @@ public class AllUtil {
     public static Map<String,String> getFileList(String parentDirFile, String[] platformName) throws DocumentException {
         HashMap<String,String> strings = new HashMap<String,String>();
         for(String platform : platformName) {
-            File file = new File(parentDirFile+platform);
+            File file = new File(parentDirFile+platform+ "/db1/");
             if (file.isDirectory()) {
                 String[] list = file.list();
                 for (String fileTemp : list) {
-                    File file1 = new File(parentDirFile +platform+ "/" + "db1/" + fileTemp);
+                    File file1 = new File(parentDirFile +platform + "/db1/" + fileTemp);
                     if (file1.isDirectory()) {
                         continue;
                     }
+
                     SAXReader reader = new SAXReader();
                     Document document = reader.read(file1);
                     String database = document.getRootElement().element("database").attribute("dbIp").getValue();
                     String dbPort = document.getRootElement().element("database").attribute("dbPort").getValue();
                     if(dbPort.equals("3306")) {
-                        strings.put(database, "/data0/wg_script");
+                        strings.put(database+dbPort, "/data0/wg_script");
                     }
                     if(dbPort.equals("3307")) {
-                        strings.put(database, "/data1/wg_script");
+                        strings.put(database+dbPort, "/data1/wg_script");
                     }
                     if(dbPort.equals("3308")) {
-                        strings.put(database, "/data5/wg_script");
+                        strings.put(database+dbPort, "/data5/wg_script");
                     }
                     if(dbPort.equals("3309")) {
-                        strings.put(database, "/data6/wg_script");
+                        strings.put(database+dbPort, "/data6/wg_script");
                     }
+                    logger.info(database+dbPort);
                 }
             }
         }
