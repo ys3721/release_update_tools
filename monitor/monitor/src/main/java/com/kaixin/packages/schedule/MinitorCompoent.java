@@ -3,6 +3,7 @@ package com.kaixin.packages.schedule;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.kaixin.packages.model.esresult.EsResultBean;
+import com.kaixin.packages.model.feishubean.Content;
 import com.kaixin.packages.model.feishubean.CustomBotReq;
 import org.dom4j.DocumentException;
 import org.slf4j.Logger;
@@ -34,10 +35,12 @@ public class MinitorCompoent {
         Map<String,String> fileList = getFileList(filePareant,platmName);
         for(String keyIp : fileList.keySet().toArray(new String[0])) {
             String path = fileList.get(keyIp);
-            int totalValue = requestByIpAndWorkDir(keyIp.substring(0,keyIp.length()-4), path);
+            String ip = keyIp.substring(0, keyIp.length() - 4);
+            int totalValue = requestByIpAndWorkDir(ip, path);
             if(totalValue == 0){
                 for(String web : webHook) {
-                    String data = JSON.toJSONString(new CustomBotReq("服务器进程日志异常","请检查 "+keyIp+" 下 "+path+"所属进程"));
+                    CustomBotReq customBotReq = new CustomBotReq("text", new Content("服务器进程日志异常  请检查 " + ip + " 下 " + path + " 所属进程!"));
+                    String data = JSON.toJSONString(customBotReq);
                     doPost(web.trim(), data, "POST");
                     logger.info( web + "    汇报   " + data);
                 }
