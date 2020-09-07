@@ -2,11 +2,11 @@ server:
   port: 9091
 
 scheduling:
-  monitor: 0 */10 * * * ?
+  monitor: 0 */1 * * * ?
   filePath: /data/test/
   platmName: ios,h5,android
 #  飞书 群机器人 （Custom Bot）
-  webhook: https://www.feishu.cn/flow/api/trigger-webhook/f172ddd06840292d541a4aff3f5e192d
+  webhook: https://open.feishu.cn/open-apis/bot/v2/hook/b1f664a5-d06b-4d59-a62d-45acb88aca95
 
 es:
   url: http://106.52.90.51:8308/_search

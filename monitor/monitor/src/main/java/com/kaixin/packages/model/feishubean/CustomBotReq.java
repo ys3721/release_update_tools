@@ -1,30 +1,30 @@
 package com.kaixin.packages.model.feishubean;
 
 public class CustomBotReq {
-    private String title ;
-    private String text ;
+    private String msg_type ;
+    private Content content ;
 
     public CustomBotReq() {
     }
 
-    public CustomBotReq(String title, String text) {
-        this.title = title;
-        this.text = text;
+    public CustomBotReq(String msg_type,Content content) {
+        this.msg_type = msg_type;
+        this.content = content;
     }
 
-    public String getTitle() {
-        return title;
+    public String getMsg_type() {
+        return msg_type;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setMsg_type(String msg_type) {
+        this.msg_type = msg_type;
     }
 
-    public String getText() {
-        return text;
+    public Content getContent() {
+        return content;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setContent(Content content) {
+        this.content = content;
     }
 }
