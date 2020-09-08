@@ -30,16 +30,22 @@ public class MinitorCompoent {
     @Value("${scheduling.platmName}")
     private String[] platmName;
 
+    private boolean check = true;
+
     @Scheduled(cron="${scheduling.monitor}")
     public void minitor() throws DocumentException {
+        if(!check){
+            return;
+        }
         Map<String,String> fileList = getFileList(filePareant,platmName);
         for(String keyIp : fileList.keySet().toArray(new String[0])) {
             String path = fileList.get(keyIp);
-            String ip = keyIp.substring(0, keyIp.length() - 4);
+            String[] split = keyIp.split(" ");
+            String ip = split[0];
             int totalValue = requestByIpAndWorkDir(ip, path);
             if(totalValue == 0){
                 for(String web : webHook) {
-                    CustomBotReq customBotReq = new CustomBotReq("text", new Content("服务器进程日志异常  请检查 " + ip + " 下 " + path + " 所属进程!"));
+                    CustomBotReq customBotReq = new CustomBotReq("text", new Content(split[1] + " 服务器进程日志异常  请检查 " + ip + " 下 " + path + " 所属进程!"));
                     String data = JSON.toJSONString(customBotReq);
                     doPost(web.trim(), data, "POST");
                     logger.info( web + "    汇报   " + data);
@@ -103,4 +109,11 @@ public class MinitorCompoent {
     }
 
 
+    public boolean isCheck() {
+        return check;
+    }
+
+    public void setCheck(boolean check) {
+        this.check = check;
+    }
 }
