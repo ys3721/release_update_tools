@@ -144,3 +144,53 @@ scheduling:
     ]
 }
 ```
+
+
+```
+GET _search
+{
+  "version": true,
+  "size": 0,
+  "from": 0, 
+  "query": {
+    "bool": {
+      "must": [],
+      "filter": [
+        {
+          "bool": {
+            "should": [
+              {
+                "match_phrase": {
+                  "host.ip": "10.10.6.84"
+                }
+              }
+            ],
+            "minimum_should_match": 1
+          }
+        },
+        {
+          "bool": {
+            "minimum_should_match": 1,
+            "should": [
+              {
+                "match_phrase": {
+                  "process.working_directory": "/data0/wg_script"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "range": {
+            "@timestamp": {
+              "gte": "now-1m",
+              "lte": "now",
+              "format": "strict_date_optional_time"
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+```
