@@ -1,5 +1,9 @@
 package com.kaixin.packages.util;
 
+import com.jcraft.jsch.ChannelShell;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.io.SAXReader;
@@ -125,10 +129,31 @@ public class AllUtil {
             }
         }
         return strings;
-
     }
 
-    public static String doExec(String str) throws IOException {
+    public static Set<String> getAllIP(String parentDirFile, String[] platformName) throws DocumentException {
+        HashSet<String> strings = new HashSet<String>();
+        for(String platform : platformName) {
+            String path = parentDirFile + platform;
+            File file = new File(path);
+            if (file.isDirectory()) {
+                String[] list = file.list();
+                for (String fileTemp : list) {
+                    File file1 = new File(path + "/" +fileTemp);
+                    if (file1.isDirectory()) {
+                        continue;
+                    }
+                    SAXReader reader = new SAXReader();
+                    Document document = reader.read(file1);
+                    String dbIp = document.getRootElement().element("database").attribute("dbIp").getValue();
+                    strings.add(dbIp);
+                }
+            }
+        }
+        return strings;
+    }
+
+    public static String doExec(String str) throws IOException, InterruptedException {
         Process exec = Runtime.getRuntime().exec(str);
 
         java.io.InputStream is = exec.getInputStream();
@@ -137,8 +162,40 @@ public class AllUtil {
         if (s.hasNext()) {
             val.append(s.next());
         }
+        Thread.sleep(5000);
         s.close();
         is.close();
         return val.toString();
+    }
+
+    public static Session getJSCHSession(String ip) throws JSchException {
+        JSch jsch = new JSch();
+        Session session = jsch.getSession("root", ip, 22);
+        session.setPassword("P7QQQo5o1yx9");
+        session.setConfig("StrictHostKeyChecking", "no");
+        session.connect(60 * 1000);
+        return session;
+    }
+
+
+    public static String doExecJSCH(Session session,List<String> commands) throws JSchException, IOException {
+        ChannelShell channel = (ChannelShell) session.openChannel("shell");
+        channel.connect();
+        InputStream inputStream = channel.getInputStream();
+        OutputStream outputStream = channel.getOutputStream();
+        for(String command : commands){
+            outputStream.write(command.getBytes());
+        }
+        String cmd4 = "exit \n\r";
+        outputStream.write(cmd4.getBytes());
+        outputStream.flush();
+        BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
+        StringBuilder sb = new StringBuilder();
+        String msg = null;
+        while((msg = in.readLine())!=null){
+            sb.append(msg);
+        }
+        in.close();
+        return sb.toString();
     }
 }
