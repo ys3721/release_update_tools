@@ -11,7 +11,14 @@ import java.io.IOException;
 @RestController
 public class BotController {
 
-    @RequestMapping("/")
+    /**
+     * 飞书机器人 校验url
+     * @param httpRequest
+     * @param httpResponse
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping("/feiShuValid")
     public String valid(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws IOException {
         BufferedReader br = httpRequest.getReader();
 
@@ -23,4 +30,7 @@ public class BotController {
 
         return wholeStr;
     }
+
+
+
 }

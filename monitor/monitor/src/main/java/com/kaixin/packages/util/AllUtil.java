@@ -94,32 +94,33 @@ public class AllUtil {
     public static Map<String,String> getFileList(String parentDirFile, String[] platformName) throws DocumentException {
         HashMap<String,String> strings = new HashMap<String,String>();
         for(String platform : platformName) {
-            File file = new File(parentDirFile+platform+ "/db1/");
+            String path = parentDirFile + platform;
+            File file = new File(path);
             if (file.isDirectory()) {
                 String[] list = file.list();
                 for (String fileTemp : list) {
-                    File file1 = new File(parentDirFile +platform + "/db1/" + fileTemp);
+                    File file1 = new File(path + "/" +fileTemp);
                     if (file1.isDirectory()) {
                         continue;
                     }
-
                     SAXReader reader = new SAXReader();
                     Document document = reader.read(file1);
                     String database = document.getRootElement().element("database").attribute("dbIp").getValue();
                     String dbPort = document.getRootElement().element("database").attribute("dbPort").getValue();
+                    String svrName = document.getRootElement().element("database").attribute("svrName").getValue();
                     if(dbPort.equals("3306")) {
-                        strings.put(database+dbPort, "/data0/wg_script");
+                        strings.put(database+" "+svrName, "/data0/wg_script");
                     }
                     if(dbPort.equals("3307")) {
-                        strings.put(database+dbPort, "/data1/wg_script");
+                        strings.put(database+" "+svrName, "/data1/wg_script");
                     }
                     if(dbPort.equals("3308")) {
-                        strings.put(database+dbPort, "/data5/wg_script");
+                        strings.put(database+" "+svrName, "/data5/wg_script");
                     }
                     if(dbPort.equals("3309")) {
-                        strings.put(database+dbPort, "/data6/wg_script");
+                        strings.put(database+" "+svrName, "/data6/wg_script");
                     }
-                    logger.info(database+dbPort);
+                    logger.info(database + " " +svrName);
                 }
             }
         }

@@ -10,3 +10,9 @@ scheduling:
 
 es:
   url: http://106.52.90.51:8308/_search
+
+spring:
+  mvc:
+    view:
+      prefix: /
+      suffix: .html
