@@ -127,4 +127,18 @@ public class AllUtil {
         return strings;
 
     }
+
+    public static String doExec(String str) throws IOException {
+        Process exec = Runtime.getRuntime().exec(str);
+
+        java.io.InputStream is = exec.getInputStream();
+        java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+        StringBuilder val = new StringBuilder();
+        if (s.hasNext()) {
+            val.append(s.next());
+        }
+        s.close();
+        is.close();
+        return val.toString();
+    }
 }

@@ -2,7 +2,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.kaixin.packages.model.esresult.EsResultBean;
 import org.junit.Test;
 
-import java.util.Set;
+import java.io.IOException;
 
 import static com.kaixin.packages.util.AllUtil.*;
 
@@ -10,7 +10,10 @@ public class UnitTest {
 
 
     @Test
-    public void test1() {
+    public void test1() throws IOException {
+        String exec = "ssh -o StrictHostKeyChecking=no -i C:\\Users\\89264\\Desktop\\id_rsa_ios root@106.52.79.53 \"ls\"";
+        String s = doExec(exec);
+        System.out.println(s);
     }
 
     @Test

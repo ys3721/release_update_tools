@@ -39,6 +39,7 @@ public class InitAgentController {
         return minitorCompoent.isCheck() ? "开" : "关";
     }
 
+    //TODO
     @RequestMapping(value = "/initAgentForm", method = RequestMethod.POST)
     public @ResponseBody String initAgentForm(
             @RequestParam(value = "IP") String ip,
@@ -46,7 +47,15 @@ public class InitAgentController {
             HttpServletResponse httpServletResponse) throws IOException {
         logger.info(ip + "platform");
         logger.info(platform);
-        Process exec = Runtime.getRuntime().exec("");
+
+        // renice
+
+        // wget
+
+        // tar
+
+        //start
+
         return "success";
     }
 
