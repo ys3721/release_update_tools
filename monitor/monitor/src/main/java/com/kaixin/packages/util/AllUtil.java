@@ -103,6 +103,9 @@ public class AllUtil {
             if (file.isDirectory()) {
                 String[] list = file.list();
                 for (String fileTemp : list) {
+                    if(!fileTemp.endsWith(".xml")){
+                        continue;
+                    }
                     File file1 = new File(path + "/" +fileTemp);
                     if (file1.isDirectory()) {
                         continue;
@@ -177,7 +180,6 @@ public class AllUtil {
         return session;
     }
 
-
     public static String doExecJSCH(Session session,List<String> commands) throws JSchException, IOException {
         ChannelShell channel = (ChannelShell) session.openChannel("shell");
         channel.connect();
@@ -193,9 +195,36 @@ public class AllUtil {
         StringBuilder sb = new StringBuilder();
         String msg = null;
         while((msg = in.readLine())!=null){
-            sb.append(msg);
+            sb.append("\n").append(msg);
         }
         in.close();
         return sb.toString();
+    }
+
+    public static boolean checkMetricbeatPid(String ip) throws JSchException, IOException {
+        Session jschSession = getJSCHSession(ip);
+        ArrayList<String> strings = new ArrayList<String>();
+        strings.add("ps aux | grep metricbeat | grep -v grep \n\r");
+        String s = doExecJSCH(jschSession,strings);
+        if(s.contains("metricbeat.yml")){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public static String initAgent(String ip) throws JSchException, IOException {
+        String ipStr = ip.trim();
+        Session jschSession = getJSCHSession(ipStr);
+        ArrayList<String> strings = new ArrayList<String>();
+        strings.add("cd /data0 \n\r");
+        strings.add("renice -n -5 $(lsof -i :22 | grep \"*\" | awk '{print $2}') \n\r");
+        strings.add("ps aux | grep metricbeat | grep -v grep \n\r");
+        strings.add("wget -nc -P /data0 http://10.10.6.140:8080/metricbeat.tar \n\r");
+        strings.add("tar -xzvf /data0/metricbeat.tar -C /data0/ \n\r");
+        strings.add("nohup /data0/metricbeat/metricbeat -e -c /data0/metricbeat/metricbeat.yml > /dev/null 2>&1 & \n\r");
+        strings.add("pwd \n\r");
+        String s = doExecJSCH(jschSession,strings);
+        return s;
     }
 }
