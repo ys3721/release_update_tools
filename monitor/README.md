@@ -194,3 +194,20 @@ GET _search
   }
 }
 ```
+
+
+```
+查 指定路径的serverIpList
+http://106.52.90.51:9090/getAllIpDiy?filePareant=/data/servers/&platmName=ios
+
+
+http://106.52.90.51:9090/getAllIP
+查所有IP 检测的
+
+webhook 部署监控 只当ip即可
+http://106.52.90.51:9090/feiShuAgentInit?ip=10.10.6.221
+
+
+```
+
+
