@@ -2,8 +2,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.jcraft.jsch.*;
 import com.kaixin.packages.model.JSCHUserInfo;
 import com.kaixin.packages.model.esresult.EsResultBean;
-import com.kaixin.packages.util.AllUtil;
-import org.junit.Test;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,7 +14,7 @@ import static com.kaixin.packages.util.AllUtil.*;
 public class UnitTest {
 
 
-    @Test
+//    @Test
     public void test1() throws IOException {
 //        String exec = "ssh -o StrictHostKeyChecking=no -i C:\\Users\\89264\\Desktop\\id_rsa_ios root@106.52.79.53 \"ls;ls;ls\"";
 //        String s = doExec(exec);
@@ -37,7 +35,7 @@ public class UnitTest {
 
     }
 
-    @Test
+//    @Test
     public void test2() {
         String ip = "10.10.6.86";
         String workDir = "/data1/wg_script";
@@ -142,6 +140,18 @@ public class UnitTest {
         ArrayList<String> strings = new ArrayList<String>();
         strings.add("pwd");
         String s = doExecJSCH(jschSession,strings);
+        System.out.println(s);
+    }
+
+//    @Test
+    public void test5() throws Exception {
+        Session jschSession = getJSCHSession("106.52.24.200");
+        ArrayList<String> strings = new ArrayList<String>();
+        strings.add("ps aux | grep metricbeat | grep -v grep \n\r");
+        String s = doExecJSCH(jschSession,strings);
+        if(s.contains("metricbeat.yml")){
+            System.out.println("true");
+        }
         System.out.println(s);
     }
 }
