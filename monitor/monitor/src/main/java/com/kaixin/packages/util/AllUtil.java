@@ -214,6 +214,10 @@ public class AllUtil {
     }
 
     public static String initAgent(String ip) throws JSchException, IOException {
+        boolean result = AllUtil.checkMetricbeatPid(ip);
+        if(result){
+            return "已安装";
+        }
         String ipStr = ip.trim();
         Session jschSession = getJSCHSession(ipStr);
         ArrayList<String> strings = new ArrayList<String>();
