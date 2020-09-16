@@ -62,11 +62,12 @@ public class InitAgentController {
     @RequestMapping(value = "/opearAgentForm", method = RequestMethod.POST)
     public @ResponseBody String opearAgentForm(
             @RequestParam(value = "switchClose") String switchClose,
-            HttpServletResponse httpServletResponse) throws IOException {
+            HttpServletResponse httpServletResponse) throws IOException, JSchException {
         logger.info("switchClose"+ switchClose);
         if("0".equals(switchClose)){
             minitorCompoent.setCheck(false);
         }else {
+            AllUtil.updateServer("10.10.6.140");
             minitorCompoent.setCheck(true);
         }
         return "success";

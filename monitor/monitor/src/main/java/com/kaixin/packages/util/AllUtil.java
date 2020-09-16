@@ -231,4 +231,16 @@ public class AllUtil {
         String s = doExecJSCH(jschSession,strings);
         return s;
     }
+
+    public static String updateServer(String ip) throws JSchException, IOException {
+        String ipStr = ip.trim();
+        Session jschSession = getJSCHSession(ipStr);
+        ArrayList<String> strings = new ArrayList<String>();
+        strings.add("rm -rf /data/servers/* \n\r");
+        strings.add("scp -r root@10.10.2.153:/data0/wg_gmserver/WEB-INF/classes/conf/db1 /data/servers/android/ \n\r");
+        strings.add("scp -r root@10.10.2.3:/data0/wg_gmserver/WEB-INF/classes/conf/db1 /data/servers/ios/ \n\r");
+        strings.add("scp -r root@10.10.9.103:/data0/wg_gmserver/WEB-INF/classes/conf/db1 /data/servers/h5/ \n\r");
+        String s = doExecJSCH(jschSession,strings);
+        return s;
+    }
 }
