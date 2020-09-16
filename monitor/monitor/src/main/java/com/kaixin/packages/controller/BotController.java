@@ -107,6 +107,7 @@ public class BotController {
             String ip = data.substring(2);
             result = AllUtil.checkMetricbeatPid(ip);
             jsonObject.put("result",result);
+            data = "cm"+data;
         }else if(data.startsWith("init")) {
             logger.info(data+ " <<<< 进入部署");
 
@@ -119,7 +120,7 @@ public class BotController {
             }
             jsonObject.put("result",result);
         }
-        CustomBotReq customBotReq = new CustomBotReq("text", new Content((result?"成功":"失败") ));
+        CustomBotReq customBotReq = new CustomBotReq("text", new Content( "部署监控"+(result?"成功":"失败" ) + data.substring(4) ));
         data = JSON.toJSONString(customBotReq);
         doPost(webHook[0].trim(), data, "POST");
         return jsonObject;
