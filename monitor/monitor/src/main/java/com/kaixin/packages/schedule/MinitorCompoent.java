@@ -54,6 +54,16 @@ public class MinitorCompoent {
         }
     }
 
+    @Scheduled(cron="0 0 20 * * ?")
+    public void checkSwich(){
+        if(!check){
+            CustomBotReq customBotReq = new CustomBotReq("text", new Content( " 当前监控程序未开启！"));
+            String data = JSON.toJSONString(customBotReq);
+            for(String web : webHook) {
+                doPost(web.trim(), data, "POST");
+            }
+        }
+    }
 
     public int requestByIpAndWorkDir(String ip,String workDir) {
         String reqBean = "{\n" +
