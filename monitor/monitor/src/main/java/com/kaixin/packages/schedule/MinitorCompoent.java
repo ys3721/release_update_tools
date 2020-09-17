@@ -54,7 +54,7 @@ public class MinitorCompoent {
         }
     }
 
-    @Scheduled(cron="0 0 20 * * ?")
+    @Scheduled(cron="0 30 18 * * ?")
     public void checkSwich(){
         if(!check){
             CustomBotReq customBotReq = new CustomBotReq("text", new Content( " 当前监控程序未开启！"));
@@ -62,6 +62,12 @@ public class MinitorCompoent {
             for(String web : webHook) {
                 doPost(web.trim(), data, "POST");
             }
+            return;
+        }
+        CustomBotReq customBotReq = new CustomBotReq("text", new Content( " 当前监控程序运行中！"));
+        String data = JSON.toJSONString(customBotReq);
+        for(String web : webHook) {
+            doPost(web.trim(), data, "POST");
         }
     }
 
