@@ -231,6 +231,15 @@ public class AllUtil {
         String s = doExecJSCH(jschSession,strings);
         return s;
     }
+    public static String startAgent(String ip) throws JSchException, IOException {
+        String ipStr = ip.trim();
+        Session jschSession = getJSCHSession(ipStr);
+        ArrayList<String> strings = new ArrayList<String>();
+        strings.add("cd /data0 \n\r");
+        strings.add("nohup /data0/metricbeat/metricbeat -e -c /data0/metricbeat/metricbeat.yml > /dev/null 2>&1 & \n\r");
+        String s = doExecJSCH(jschSession,strings);
+        return s;
+    }
 
     public static String updateServer(String ip) throws JSchException, IOException {
         String ipStr = ip.trim();
