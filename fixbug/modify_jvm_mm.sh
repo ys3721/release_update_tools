@@ -18,12 +18,12 @@ else
         exit 1
 fi
 
-ssh $lan_ip "sed -i 's/2560M/2304M/g' /data0/wg_deploy/$domain/$lan_ip/wg_config/game_server_config/launch.sh";
-ssh $lan_ip "sed -i 's/2560M/2304M/g' /data1/wg_deploy/$domain/$lan_ip/wg_config/game_server_config/launch.sh";
-ssh $lan_ip "sed -i 's/2560M/2304M/g' /data5/wg_deploy/$domain/$lan_ip/wg_config/game_server_config/launch.sh";
-ssh $lan_ip "sed -i 's/2560M/2304M/g' /data6/wg_deploy/$domain/$lan_ip/wg_config/game_server_config/launch.sh";
+ssh $lan_ip "sed -i 's/\"2560\"/\"2304\"/g' /data0/wg_deploy/deploy_config_$server_name.xml";
+ssh $lan_ip "sed -i 's/\"2560\"/\"2304\"/g' /data1/wg_deploy/deploy_config_$server_name.xml";
+ssh $lan_ip "sed -i 's/\"2560\"/\"2304\"/g' /data5/wg_deploy/deploy_config_$server_name.xml";
+ssh $lan_ip "sed -i 's/\"2560\"/\"2304\"/g' /data6/wg_deploy/deploy_config_$server_name.xml";
 
-ssh $lan_ip "sed -i 's/512M/448M/g' /data0/wg_deploy/$domain/$lan_ip/wg_config/log_server_config/launch.sh";
-ssh $lan_ip "sed -i 's/512M/448M/g' /data1/wg_deploy/$domain/$lan_ip/wg_config/log_server_config/launch.sh";
-ssh $lan_ip "sed -i 's/512M/448M/g' /data5/wg_deploy/$domain/$lan_ip/wg_config/log_server_config/launch.sh";
-ssh $lan_ip "sed -i 's/512M/448M/g' /data6/wg_deploy/$domain/$lan_ip/wg_config/log_server_config/launch.sh";
+ssh $lan_ip "sed -i 's/\"512\"/\"448\"/g' /data0/wg_deploy/deploy_config_$server_name.xml";
+ssh $lan_ip "sed -i 's/\"512\"/\"448\"/g' /data1/wg_deploy/deploy_config_$server_name.xml";
+ssh $lan_ip "sed -i 's/\"512\"/\"448\"/g' /data5/wg_deploy/deploy_config_$server_name.xml";
+ssh $lan_ip "sed -i 's/\"512\"/\"448\"/g' /data6/wg_deploy/deploy_config_$server_name.xml";
