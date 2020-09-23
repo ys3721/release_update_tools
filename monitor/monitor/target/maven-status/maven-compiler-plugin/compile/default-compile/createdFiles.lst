@@ -1,0 +1,9 @@
+com\kaixin\packages\model\feishubean\CustomBotReq.class
+com\kaixin\packages\schedule\MinitorCompoent.class
+com\kaixin\packages\model\esresult\EsResultBean.class
+com\kaixin\packages\Start.class
+com\kaixin\packages\util\AllUtil.class
+com\kaixin\packages\model\esresult\Hits.class
+com\kaixin\packages\model\feishubean\Content.class
+com\kaixin\packages\controller\BotController.class
+com\kaixin\packages\model\esresult\Total.class
