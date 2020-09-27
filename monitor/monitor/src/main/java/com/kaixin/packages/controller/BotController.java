@@ -119,6 +119,17 @@ public class BotController {
                 result = AllUtil.checkMetricbeatPid(ip);
             }
             jsonObject.put("result",result);
+        }else if(data.startsWith("sm")){
+            logger.info(data+ " <<<< 检查启动监控");
+            String ip = data.substring(2);
+            result = AllUtil.checkMetricbeatPid(ip);
+            if(!result) {
+                logger.info(data+ " <<<< 启动监控");
+                AllUtil.startAgent(ip);
+                result = AllUtil.checkMetricbeatPid(ip);
+            }
+            data = "sm"+data;
+            jsonObject.put("result",result);
         }
         CustomBotReq customBotReq = new CustomBotReq("text", new Content( "部署监控"+(result?"成功":"失败" ) + data.substring(4) ));
         data = JSON.toJSONString(customBotReq);
