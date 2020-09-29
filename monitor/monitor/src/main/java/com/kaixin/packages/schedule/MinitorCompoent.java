@@ -117,7 +117,7 @@ public class MinitorCompoent {
                 "    }\n" +
                 "  }\n" +
                 "}";
-        String x = doPost("http://106.52.90.51:8308/_search",
+        String x = doPost("http://106.52.90.51:8308/metricbeat-*/_search",
                 reqBean,"POST");
         logger.info( ip + "   " + workDir + "ES汇报   " + x);
         EsResultBean parse = JSONObject.parseObject(x, EsResultBean.class);
