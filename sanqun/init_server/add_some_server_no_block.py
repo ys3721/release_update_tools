@@ -231,10 +231,9 @@ def update_center_server_xml(config_dic_array):
 """
 This script solve deploy multiply game server on one machine by args count
 """
-server_config_files = sys.argv[0:len(sys.argv) - 1]
-deploy_count = len(server_config_files) - 2
+server_config_files = sys.argv
+deploy_count = len(server_config_files) - 1
 deploy_config = []
-pwd = sys.argv[len(sys.argv)]
 
 for i in range(0, deploy_count):
     server_config_file_name = server_config_files[i + 1]
@@ -242,7 +241,7 @@ for i in range(0, deploy_count):
     deploy_config.append(config_dic)
 
 print deploy_config
-print "password is %s" % pwd
+
 conform = raw_input("is right ? y/n")
 if conform != 'y':
     exit(1)
