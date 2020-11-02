@@ -23,7 +23,7 @@ DB_PASSWORD_CONFIG = {"sys_user": "root", "sys_password": "123456",
 MEMORY_CONFIG = {"1": {"game_server_memory": '8096', "log_server_memory": '1012'},
                  "2": {"game_server_memory": '4096', "log_server_memory": '819'},
                  "3": {"game_server_memory": '3072', "log_server_memory": '512'},
-                 "4": {"game_server_memory": '2560', "log_server_memory": '512'}
+                 "4": {"game_server_memory": '2304', "log_server_memory": '448'}
                  }
 # 约定常量一般不用修改
 DEFAULT_CONFIG = [{'path': '/data0', 'mysql_port': '3306', 'game_port': '8080', 'telnet_port' : '7000',
@@ -231,10 +231,9 @@ def update_center_server_xml(config_dic_array):
 """
 This script solve deploy multiply game server on one machine by args count
 """
-server_config_files = sys.argv[0:len(sys.argv) - 1]
-deploy_count = len(server_config_files) - 2
+server_config_files = sys.argv
+deploy_count = len(server_config_files) - 1
 deploy_config = []
-pwd = sys.argv[len(sys.argv)]
 
 for i in range(0, deploy_count):
     server_config_file_name = server_config_files[i + 1]
@@ -242,7 +241,7 @@ for i in range(0, deploy_count):
     deploy_config.append(config_dic)
 
 print deploy_config
-print "password is %s" % pwd
+
 conform = raw_input("is right ? y/n")
 if conform != 'y':
     exit(1)

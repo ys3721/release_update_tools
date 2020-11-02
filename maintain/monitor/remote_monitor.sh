@@ -49,5 +49,4 @@ if [[ "$server_count" != "$process_count" ]] && [ $server_count -ne $process_cou
   then
     echo "$1所在的服务器好像是有机器挂了 The server need server count is $server_count , ps count is $process_count ."
     python /data3/remote_execute/scripts/monitor/sms.py 15811302052 "$1所在的服务器好像是有机器挂了 The server need server count is $server_count , ps count is $process_count ."
-
 fi

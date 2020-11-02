@@ -23,7 +23,7 @@ DB_PASSWORD_CONFIG = {"sys_user": "root", "sys_password": "123456",
 MEMORY_CONFIG = {"1": {"game_server_memory": '8096', "log_server_memory": '1012'},
                  "2": {"game_server_memory": '4096', "log_server_memory": '819'},
                  "3": {"game_server_memory": '3072', "log_server_memory": '512'},
-                 "4": {"game_server_memory": '2560', "log_server_memory": '512'}
+                 "4": {"game_server_memory": '2304', "log_server_memory": '448'}
                  }
 # 约定常量一般不用修改
 DEFAULT_CONFIG = [{'path': '/data0', 'mysql_port': '3306', 'game_port': '8080', 'telnet_port' : '7000',
