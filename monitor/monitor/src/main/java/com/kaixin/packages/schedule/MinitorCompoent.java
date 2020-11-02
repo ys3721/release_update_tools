@@ -29,11 +29,18 @@ public class MinitorCompoent {
     private String[] webHook;
     @Value("${scheduling.platmName}")
     private String[] platmName;
+    @Value("${h5.export.switch}")
+    private boolean exportSwitch;
 
     private boolean check = true;
 
+
+
     @Scheduled(cron="${scheduling.monitor}")
     public void minitor() throws DocumentException {
+        if(exportSwitch){
+            return;
+        }
         if(!check){
             return;
         }
@@ -56,6 +63,9 @@ public class MinitorCompoent {
 
     @Scheduled(cron="0 30 18 * * ?")
     public void checkSwich(){
+        if(exportSwitch){
+            return;
+        }
         if(!check){
             CustomBotReq customBotReq = new CustomBotReq("text", new Content( " 当前监控程序未开启！"));
             String data = JSON.toJSONString(customBotReq);
@@ -117,7 +127,7 @@ public class MinitorCompoent {
                 "    }\n" +
                 "  }\n" +
                 "}";
-        String x = doPost("http://106.52.90.51:8308/_search",
+        String x = doPost("http://106.52.90.51:8308/metricbeat-*/_search",
                 reqBean,"POST");
         logger.info( ip + "   " + workDir + "ES汇报   " + x);
         EsResultBean parse = JSONObject.parseObject(x, EsResultBean.class);

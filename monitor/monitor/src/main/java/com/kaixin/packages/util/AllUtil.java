@@ -172,9 +172,13 @@ public class AllUtil {
     }
 
     public static Session getJSCHSession(String ip) throws JSchException {
+        return getJSCHSession(ip,"root","P7QQQo5o1yx9");
+    }
+
+    public static Session getJSCHSession(String ip,String account,String pwd) throws JSchException {
         JSch jsch = new JSch();
-        Session session = jsch.getSession("root", ip, 22);
-        session.setPassword("P7QQQo5o1yx9");
+        Session session = jsch.getSession(account, ip, 22);
+        session.setPassword(pwd);
         session.setConfig("StrictHostKeyChecking", "no");
         session.connect(60 * 1000);
         return session;
