@@ -172,6 +172,8 @@ public class InitAgentController {
         strings.add("mysqldump -t -c -ugmroot -P"+dbPort+" -p12345600 -h"+dbIp+" wg_lj t_quest --where='id='+"+charId+" >> /root/charInfo/"+charId+".sql \n\r");
         strings.add("mysqldump -t -c -ugmroot -P"+dbPort+" -p12345600 -h"+dbIp+" wg_lj t_pet --where='charId='+"+charId+" >> /root/charInfo/"+charId+".sql \n\r");
         strings.add("mysqldump -t -c -ugmroot -P"+dbPort+" -p12345600 -h"+dbIp+" wg_lj t_character_offline --where='id='+"+charId+" >> /root/charInfo/"+charId+".sql \n\r");
+        strings.add("echo \"delete from t_enfeoffs_city where charId="+charId+";\" >> /root/charInfo/"+charId+".sql \n\r");
+        strings.add("mysqldump -t -c -ugmroot -P"+dbPort+" -p12345600 -h"+dbIp+" wg_lj t_enfeoffs_city --where='charId='+"+charId+" >> /root/charInfo/"+charId+".sql \n\r");
         //导出到sql 完成 mysql -ugmroot -pM4BsaVivm2XI -P3309 -h10.10.6.59 -A -N
         strings.add("mysql -ugmroot -p12345600 -P"+testPort+" -h"+testIp+" wg_lj -A -N -e \"source /root/charInfo/"+charId+".sql;\" \n\r");
         strings.add("mysql -ugmroot -p12345600 -P"+testPort+" -h"+testIp+" wg_lj -A -N -e \"UPDATE t_character SET passportId="+bindAccount+" WHERE id = "+charId+";\" \n\r");
@@ -196,8 +198,8 @@ public class InitAgentController {
         }
         logger.info(charId +" | "+serverId+" | " + " | " +testIp+" | "+testPort+" | "+bindAccount);
         //找IP /data0/wg_gmserver/WEB-INF/classes/conf/db1/h109_db.xml
-        String filePath = "/data0/wg_gmserver/WEB-INF/classes/conf/db1/"+serverId.trim()+"_db.xml";
-//        String filePath = "D:/"+serverId.trim()+"_db.xml";
+//        String filePath = "/data0/wg_gmserver/WEB-INF/classes/conf/db1/"+serverId.trim()+"_db.xml";
+        String filePath = "D:/"+serverId.trim()+"_db.xml";
         SAXReader reader = new SAXReader();
         Document document = reader.read(new File(filePath));
         String dbIp = document.getRootElement().element("database").attribute("dbIp").getValue();
@@ -218,6 +220,8 @@ public class InitAgentController {
         strings.add("mysqldump -t -c -ugmroot -P"+dbPort+" -p12345600 -h"+dbIp+" wg_lj t_quest --where='id='+"+charId+" >> /root/charInfo/"+charId+".sql \n\r");
         strings.add("mysqldump -t -c -ugmroot -P"+dbPort+" -p12345600 -h"+dbIp+" wg_lj t_pet --where='charId='+"+charId+" >> /root/charInfo/"+charId+".sql \n\r");
         strings.add("mysqldump -t -c -ugmroot -P"+dbPort+" -p12345600 -h"+dbIp+" wg_lj t_character_offline --where='id='+"+charId+" >> /root/charInfo/"+charId+".sql \n\r");
+        strings.add("echo \"delete from t_enfeoffs_city where charId="+charId+";\" >> /root/charInfo/"+charId+".sql \n\r");
+        strings.add("mysqldump -t -c -ugmroot -P"+dbPort+" -p12345600 -h"+dbIp+" wg_lj t_enfeoffs_city --where='charId='+"+charId+" >> /root/charInfo/"+charId+".sql \n\r");
         //导出到sql 完成 mysql -ugmroot -p12345600 -P3309 -h10.10.6.59 -A -N
         strings.add("mysql -ugmroot -p12345600 -P"+testPort+" -h"+testIp+" wg_lj -A -N -e \"source /root/charInfo/"+charId+".sql;\" \n\r");
         strings.add("mysql -ugmroot -p12345600 -P"+testPort+" -h"+testIp+" wg_lj -A -N -e \"UPDATE t_character SET passportId="+bindAccount+" WHERE id = "+charId+";\" \n\r");
