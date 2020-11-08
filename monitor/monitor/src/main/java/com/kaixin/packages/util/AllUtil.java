@@ -172,7 +172,7 @@ public class AllUtil {
     }
 
     public static Session getJSCHSession(String ip) throws JSchException {
-        return getJSCHSession(ip,"root","P7QQQo5o1yx9");
+        return getJSCHSession(ip,"root","password");
     }
 
     public static Session getJSCHSession(String ip,String account,String pwd) throws JSchException {
