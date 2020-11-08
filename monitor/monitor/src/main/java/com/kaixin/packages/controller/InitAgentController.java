@@ -121,16 +121,16 @@ public class InitAgentController {
 
         ArrayList<String> strings = new ArrayList<String>();
         strings.add("rm -rf /root/charInfo/"+charId+".sql \n\r");
-        strings.add("mysqldump -t -c -ugmroot -P"+dbPort+" -pM4BsaVivm2XI -h"+dbIp+" wg_lj t_character --where='id='+"+charId+" >> /root/charInfo/"+charId+".sql \n\r");
-        strings.add("mysqldump -t -c -ugmroot -P"+dbPort+" -pM4BsaVivm2XI -h"+dbIp+" wg_lj t_hero --where='charId='+"+charId+" >> /root/charInfo/"+charId+".sql \n\r");
-        strings.add("mysqldump -t -c -ugmroot -P"+dbPort+" -pM4BsaVivm2XI -h"+dbIp+" wg_lj t_item --where='charId='+"+charId+" >> /root/charInfo/"+charId+".sql \n\r");
-        strings.add("mysqldump -t -c -ugmroot -P"+dbPort+" -pM4BsaVivm2XI -h"+dbIp+" wg_lj t_quest --where='id='+"+charId+" >> /root/charInfo/"+charId+".sql \n\r");
-        strings.add("mysqldump -t -c -ugmroot -P"+dbPort+" -pM4BsaVivm2XI -h"+dbIp+" wg_lj t_pet --where='charId='+"+charId+" >> /root/charInfo/"+charId+".sql \n\r");
-        strings.add("mysqldump -t -c -ugmroot -P"+dbPort+" -pM4BsaVivm2XI -h"+dbIp+" wg_lj t_character_offline --where='id='+"+charId+" >> /root/charInfo/"+charId+".sql \n\r");
-        //导出到sql 完成 mysql -ugmroot -pM4BsaVivm2XI -P3309 -h10.10.6.59 -A -N
-        strings.add("mysql -ugmroot -pM4BsaVivm2XI -P"+testPort+" -h"+testIp+" wg_lj -A -N -e \"source /root/charInfo/"+charId+".sql;\" \n\r");
-        strings.add("mysql -ugmroot -pM4BsaVivm2XI -P"+testPort+" -h"+testIp+" wg_lj -A -N -e \"UPDATE t_character SET passportId="+bindAccount+" WHERE id = "+charId+";\" \n\r");
-        strings.add("mysql -ugmroot -pM4BsaVivm2XI -P"+testPort+" -h"+testIp+" wg_lj -A -N -e \"UPDATE t_character SET guildId=0 WHERE id = "+charId+";\" \n\r");
+        strings.add("mysqldump -t -c -umysqlac -P"+dbPort+" -ppassword -h"+dbIp+" wg_lj t_character --where='id='+"+charId+" >> /root/charInfo/"+charId+".sql \n\r");
+        strings.add("mysqldump -t -c -umysqlac -P"+dbPort+" -ppassword -h"+dbIp+" wg_lj t_hero --where='charId='+"+charId+" >> /root/charInfo/"+charId+".sql \n\r");
+        strings.add("mysqldump -t -c -umysqlac -P"+dbPort+" -ppassword -h"+dbIp+" wg_lj t_item --where='charId='+"+charId+" >> /root/charInfo/"+charId+".sql \n\r");
+        strings.add("mysqldump -t -c -umysqlac -P"+dbPort+" -ppassword -h"+dbIp+" wg_lj t_quest --where='id='+"+charId+" >> /root/charInfo/"+charId+".sql \n\r");
+        strings.add("mysqldump -t -c -umysqlac -P"+dbPort+" -ppassword -h"+dbIp+" wg_lj t_pet --where='charId='+"+charId+" >> /root/charInfo/"+charId+".sql \n\r");
+        strings.add("mysqldump -t -c -umysqlac -P"+dbPort+" -ppassword -h"+dbIp+" wg_lj t_character_offline --where='id='+"+charId+" >> /root/charInfo/"+charId+".sql \n\r");
+        //导出到sql 完成 mysql -umysqlac -ppassword -P3309 -h10.10.6.59 -A -N
+        strings.add("mysql -umysqlac -ppassword -P"+testPort+" -h"+testIp+" wg_lj -A -N -e \"source /root/charInfo/"+charId+".sql;\" \n\r");
+        strings.add("mysql -umysqlac -ppassword -P"+testPort+" -h"+testIp+" wg_lj -A -N -e \"UPDATE t_character SET passportId="+bindAccount+" WHERE id = "+charId+";\" \n\r");
+        strings.add("mysql -umysqlac -ppassword -P"+testPort+" -h"+testIp+" wg_lj -A -N -e \"UPDATE t_character SET guildId=0 WHERE id = "+charId+";\" \n\r");
         //执行
         Session jschSession = getJSCHSession("10.10.9.103");//h5 GM后台
         String s = doExecJSCH(jschSession,strings);
@@ -166,18 +166,18 @@ public class InitAgentController {
 
         ArrayList<String> strings = new ArrayList<String>();
         strings.add("rm -rf /root/charInfo/"+charId+".sql \n\r");
-        strings.add("mysqldump -t -c -ugmroot -P"+dbPort+" -p12345600 -h"+dbIp+" wg_lj t_character --where='id='+"+charId+" >> /root/charInfo/"+charId+".sql \n\r");
-        strings.add("mysqldump -t -c -ugmroot -P"+dbPort+" -p12345600 -h"+dbIp+" wg_lj t_hero --where='charId='+"+charId+" >> /root/charInfo/"+charId+".sql \n\r");
-        strings.add("mysqldump -t -c -ugmroot -P"+dbPort+" -p12345600 -h"+dbIp+" wg_lj t_item --where='charId='+"+charId+" >> /root/charInfo/"+charId+".sql \n\r");
-        strings.add("mysqldump -t -c -ugmroot -P"+dbPort+" -p12345600 -h"+dbIp+" wg_lj t_quest --where='id='+"+charId+" >> /root/charInfo/"+charId+".sql \n\r");
-        strings.add("mysqldump -t -c -ugmroot -P"+dbPort+" -p12345600 -h"+dbIp+" wg_lj t_pet --where='charId='+"+charId+" >> /root/charInfo/"+charId+".sql \n\r");
-        strings.add("mysqldump -t -c -ugmroot -P"+dbPort+" -p12345600 -h"+dbIp+" wg_lj t_character_offline --where='id='+"+charId+" >> /root/charInfo/"+charId+".sql \n\r");
+        strings.add("mysqldump -t -c -umysqlac -P"+dbPort+" -ppassword -h"+dbIp+" wg_lj t_character --where='id='+"+charId+" >> /root/charInfo/"+charId+".sql \n\r");
+        strings.add("mysqldump -t -c -umysqlac -P"+dbPort+" -ppassword -h"+dbIp+" wg_lj t_hero --where='charId='+"+charId+" >> /root/charInfo/"+charId+".sql \n\r");
+        strings.add("mysqldump -t -c -umysqlac -P"+dbPort+" -ppassword -h"+dbIp+" wg_lj t_item --where='charId='+"+charId+" >> /root/charInfo/"+charId+".sql \n\r");
+        strings.add("mysqldump -t -c -umysqlac -P"+dbPort+" -ppassword -h"+dbIp+" wg_lj t_quest --where='id='+"+charId+" >> /root/charInfo/"+charId+".sql \n\r");
+        strings.add("mysqldump -t -c -umysqlac -P"+dbPort+" -ppassword -h"+dbIp+" wg_lj t_pet --where='charId='+"+charId+" >> /root/charInfo/"+charId+".sql \n\r");
+        strings.add("mysqldump -t -c -umysqlac -P"+dbPort+" -ppassword -h"+dbIp+" wg_lj t_character_offline --where='id='+"+charId+" >> /root/charInfo/"+charId+".sql \n\r");
         strings.add("echo \"delete from t_enfeoffs_city where charId="+charId+";\" >> /root/charInfo/"+charId+".sql \n\r");
-        strings.add("mysqldump -t -c -ugmroot -P"+dbPort+" -p12345600 -h"+dbIp+" wg_lj t_enfeoffs_city --where='charId='+"+charId+" >> /root/charInfo/"+charId+".sql \n\r");
-        //导出到sql 完成 mysql -ugmroot -pM4BsaVivm2XI -P3309 -h10.10.6.59 -A -N
-        strings.add("mysql -ugmroot -p12345600 -P"+testPort+" -h"+testIp+" wg_lj -A -N -e \"source /root/charInfo/"+charId+".sql;\" \n\r");
-        strings.add("mysql -ugmroot -p12345600 -P"+testPort+" -h"+testIp+" wg_lj -A -N -e \"UPDATE t_character SET passportId="+bindAccount+" WHERE id = "+charId+";\" \n\r");
-        strings.add("mysql -ugmroot -p12345600 -P"+testPort+" -h"+testIp+" wg_lj -A -N -e \"UPDATE t_character SET guildId=0 WHERE id = "+charId+";\" \n\r");
+        strings.add("mysqldump -t -c -umysqlac -P"+dbPort+" -ppassword -h"+dbIp+" wg_lj t_enfeoffs_city --where='charId='+"+charId+" >> /root/charInfo/"+charId+".sql \n\r");
+        //导出到sql 完成 mysql -umysqlac -ppassword -P3309 -h10.10.6.59 -A -N
+        strings.add("mysql -umysqlac -ppassword -P"+testPort+" -h"+testIp+" wg_lj -A -N -e \"source /root/charInfo/"+charId+".sql;\" \n\r");
+        strings.add("mysql -umysqlac -ppassword -P"+testPort+" -h"+testIp+" wg_lj -A -N -e \"UPDATE t_character SET passportId="+bindAccount+" WHERE id = "+charId+";\" \n\r");
+        strings.add("mysql -umysqlac -ppassword -P"+testPort+" -h"+testIp+" wg_lj -A -N -e \"UPDATE t_character SET guildId=0 WHERE id = "+charId+";\" \n\r");
         //执行
         Session jschSession = getJSCHSession("10.10.2.3");//ios GM后台
         String s = doExecJSCH(jschSession,strings);
@@ -214,18 +214,18 @@ public class InitAgentController {
 
         ArrayList<String> strings = new ArrayList<String>();
         strings.add("rm -rf /root/charInfo/"+charId+".sql \n\r");
-        strings.add("mysqldump -t -c -ugmroot -P"+dbPort+" -p12345600 -h"+dbIp+" wg_lj t_character --where='id='+"+charId+" >> /root/charInfo/"+charId+".sql \n\r");
-        strings.add("mysqldump -t -c -ugmroot -P"+dbPort+" -p12345600 -h"+dbIp+" wg_lj t_hero --where='charId='+"+charId+" >> /root/charInfo/"+charId+".sql \n\r");
-        strings.add("mysqldump -t -c -ugmroot -P"+dbPort+" -p12345600 -h"+dbIp+" wg_lj t_item --where='charId='+"+charId+" >> /root/charInfo/"+charId+".sql \n\r");
-        strings.add("mysqldump -t -c -ugmroot -P"+dbPort+" -p12345600 -h"+dbIp+" wg_lj t_quest --where='id='+"+charId+" >> /root/charInfo/"+charId+".sql \n\r");
-        strings.add("mysqldump -t -c -ugmroot -P"+dbPort+" -p12345600 -h"+dbIp+" wg_lj t_pet --where='charId='+"+charId+" >> /root/charInfo/"+charId+".sql \n\r");
-        strings.add("mysqldump -t -c -ugmroot -P"+dbPort+" -p12345600 -h"+dbIp+" wg_lj t_character_offline --where='id='+"+charId+" >> /root/charInfo/"+charId+".sql \n\r");
+        strings.add("mysqldump -t -c -umysqlac -P"+dbPort+" -ppassword -h"+dbIp+" wg_lj t_character --where='id='+"+charId+" >> /root/charInfo/"+charId+".sql \n\r");
+        strings.add("mysqldump -t -c -umysqlac -P"+dbPort+" -ppassword -h"+dbIp+" wg_lj t_hero --where='charId='+"+charId+" >> /root/charInfo/"+charId+".sql \n\r");
+        strings.add("mysqldump -t -c -umysqlac -P"+dbPort+" -ppassword -h"+dbIp+" wg_lj t_item --where='charId='+"+charId+" >> /root/charInfo/"+charId+".sql \n\r");
+        strings.add("mysqldump -t -c -umysqlac -P"+dbPort+" -ppassword -h"+dbIp+" wg_lj t_quest --where='id='+"+charId+" >> /root/charInfo/"+charId+".sql \n\r");
+        strings.add("mysqldump -t -c -umysqlac -P"+dbPort+" -ppassword -h"+dbIp+" wg_lj t_pet --where='charId='+"+charId+" >> /root/charInfo/"+charId+".sql \n\r");
+        strings.add("mysqldump -t -c -umysqlac -P"+dbPort+" -ppassword -h"+dbIp+" wg_lj t_character_offline --where='id='+"+charId+" >> /root/charInfo/"+charId+".sql \n\r");
         strings.add("echo \"delete from t_enfeoffs_city where charId="+charId+";\" >> /root/charInfo/"+charId+".sql \n\r");
-        strings.add("mysqldump -t -c -ugmroot -P"+dbPort+" -p12345600 -h"+dbIp+" wg_lj t_enfeoffs_city --where='charId='+"+charId+" >> /root/charInfo/"+charId+".sql \n\r");
-        //导出到sql 完成 mysql -ugmroot -p12345600 -P3309 -h10.10.6.59 -A -N
-        strings.add("mysql -ugmroot -p12345600 -P"+testPort+" -h"+testIp+" wg_lj -A -N -e \"source /root/charInfo/"+charId+".sql;\" \n\r");
-        strings.add("mysql -ugmroot -p12345600 -P"+testPort+" -h"+testIp+" wg_lj -A -N -e \"UPDATE t_character SET passportId="+bindAccount+" WHERE id = "+charId+";\" \n\r");
-        strings.add("mysql -ugmroot -p12345600 -P"+testPort+" -h"+testIp+" wg_lj -A -N -e \"UPDATE t_character SET guildId=0 WHERE id = "+charId+";\" \n\r");
+        strings.add("mysqldump -t -c -umysqlac -P"+dbPort+" -ppassword -h"+dbIp+" wg_lj t_enfeoffs_city --where='charId='+"+charId+" >> /root/charInfo/"+charId+".sql \n\r");
+        //导出到sql 完成 mysql -umysqlac -ppassword -P3309 -h10.10.6.59 -A -N
+        strings.add("mysql -umysqlac -ppassword -P"+testPort+" -h"+testIp+" wg_lj -A -N -e \"source /root/charInfo/"+charId+".sql;\" \n\r");
+        strings.add("mysql -umysqlac -ppassword -P"+testPort+" -h"+testIp+" wg_lj -A -N -e \"UPDATE t_character SET passportId="+bindAccount+" WHERE id = "+charId+";\" \n\r");
+        strings.add("mysql -umysqlac -ppassword -P"+testPort+" -h"+testIp+" wg_lj -A -N -e \"UPDATE t_character SET guildId=0 WHERE id = "+charId+";\" \n\r");
         //执行
         Session jschSession = getJSCHSession("10.10.2.153");//and GM后台
         String s = doExecJSCH(jschSession,strings);
