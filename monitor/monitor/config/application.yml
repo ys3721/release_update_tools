@@ -15,7 +15,7 @@ h5:
     switch: true
 
 es:
-  url: http://106.52.90.51:8308/_search
+  url: http://es_url:8308/_search
 
 spring:
   mvc:
