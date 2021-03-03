@@ -71,8 +71,8 @@ import paramiko
 import sys
 
 hostname='10.10.9.25'
-username='root'
-password='P7QQQo5o1yx9'
+username='ac'
+password='ps'
 
 if __name__=='__main__':
     ip = sys.argv[1]
