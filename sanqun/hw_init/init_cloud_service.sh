@@ -15,19 +15,31 @@ check_empty(){
   fi
 }
 
-#挂载数据盘，空行不要删除，里面回车要的给fdisk命令使用
-mount_data_disk() {
+#挂载数据盘/dev/vdb，空行不要删除，里面回车要的给fdisk命令使用
+mount_data_disk_vdb1() {
   echo "开始初始化挂载数据盘..."
+  disk_count=`fdisk -l | grep /dev/vdb | wc -l`
+  if [ $disk_count -eq 0 ];then
+    echo "没有数据盘，不需要挂载硬盘，省事儿了"
+    return 0
+  fi
   echo "n
   p
   1
 
 
   w
-  " | fdisk /dev/vdb1 && mkfs -t ext4 /dev/vdb1 && mkdir /data0 && mount /dev/vdb1 /data0
+  " | fdisk /dev/vdb && mkfs -t ext4 /dev/vdb1 && mkdir /data0 && mount /dev/vdb1 /data0
   df -TH
 }
 
+install_depend() {
+  yum install -y rsync
+  yum install -y libaio
+  yum install -y perl
+  echo "依赖包yum install 跑完了........."
+}
 
 check_empty
-mount_data_disk
+mount_data_disk_vdb1
+install_depend
