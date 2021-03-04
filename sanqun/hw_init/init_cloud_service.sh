@@ -2,15 +2,24 @@
 # -*-coding=utf8-*-
 # @Auther: Yao Shuai
 
+echo_err() {
+  echo -e "\e[1;31m $1 \e[0m"
+}
+
+echo_info() {
+  echo -e "\e[1;32m $1 \e[0m"
+}
+
+
 check_empty(){
   if [ -d "/data0" ]; then
-    echo "当前云服不是未初始化的不能执行该脚本！"
+    echo_err "当前云服不是未初始化的不能执行该脚本！"
     exit 1;
   fi
 
   mount_data0=`mount | grep data0 |wc -l`
   if [ $mount_data0 -ne 0 ]; then
-    echo "当前云服可能已经挂载数据盘不能执行该脚本！"
+    echo_err "当前云服可能已经挂载数据盘不能执行该脚本！"
     exit 1;
   fi
 }
@@ -37,7 +46,7 @@ install_depend() {
   yum install -y rsync
   yum install -y libaio
   yum install -y perl
-  echo "依赖包yum install 跑完了........."
+  echo_info "依赖包yum install 跑完了........."
 }
 
 check_empty
