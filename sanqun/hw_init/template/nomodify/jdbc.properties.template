@@ -1,0 +1,6 @@
+#JDBC Config
+db.url=jdbc:mysql://127.0.0.1:3308/wg_lj_log?useUnicode=true&characterEncoding=utf-8&useServerPrepStmts=true
+db.user=root
+db.passwd=123456
+db.maxactiveconnections=50
+db.maxidleconnections=1

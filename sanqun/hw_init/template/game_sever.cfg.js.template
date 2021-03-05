@@ -1,0 +1,108 @@
+/*
+* Server基本信息
+*/
+config.serverIndex=#server_id#
+config.serverId=#server_id#
+config.bindIp="0.0.0.0"
+config.ports=#game_port#
+config.serverName="#server_name#"
+config.serverHost="0.0.0.0"
+config.serverDomain="#domain#"
+config.baseResourceDir="#data_path#/wg_resources"
+config.battleReportRootPath="#data_path#/reports"
+
+/*
+ * 配置Log Server
+ */
+config.logConfig.logServerIp="127.0.0.1"
+config.logConfig.logServerPort=#log_port#
+
+/*
+ * 配置Telnet
+ */
+config.telnetServerName="GameServer_telnet"
+config.telnetBindIp="0.0.0.0"
+config.telnetPort=#telnet_port#
+
+/*
+* Server其他信息
+*/
+config.serverType=1
+config.debug=1
+config.charset="UTF-8"
+config.version="1.4.0.0"
+config.resourceVersion="1.4.0.0"
+config.dbVersion="1.4.0.0"
+config.regionId="1"
+config.localHostId="1001"
+config.serverGroupId="1"
+config.ioProcessor=1
+config.language="zh_CN"
+config.i18nDir="i18n"
+config.scriptDir="scripts"
+config.battleReportServiceType=0
+
+config.dbInitType=0;
+config.dbConfigName="game_server_hibernate.cfg.xml,game_server_hibernate_query.xml"
+config.h2ConfigName="game_server_h2.cfg.xml,game_server_h2_query.xml"
+config.battleReportDbConfigName="battle_report_ibatis_config.xml"
+config.turnOnH2Cache=false;
+
+config.flashSocketPolicy="<cross-domain-policy>\r\n<allow-access-from domain=\"*\" to-ports=\"80-65535\" />\r\n </cross-domain-polic
+y>\r\n"
+config.gameServerCount=1;
+config.authType=1
+
+config.maxOnlineUsers=1500
+config.openNewerGuide=1;
+config.wallowControlled=false;
+
+/*
+ * 统计打印状态输出到日志
+ */
+config.probeReportPeriod=300;
+/*
+
+/*
+ * 配置local接口相关参数
+ */
+config.gameID=5614
+config.localKey="qWIbvFQpdIrtUg4MayqW";
+config.localReportOnlinePeriod=300
+config.localReportStatusPeriod=60
+config.turnOnLocalInterface=true;
+config.requestDomain="http://api.feidou.com/";
+config.reportDomain="http://api.feidou.com/";
+
+/*
+ * 是否正式环境和登录中心服配置
+ */
+config.production=true;
+config.password="123456";
+
+config.probeConfig.turnOn=false;
+config.chargeEnabled=false;
+config.templateXorLoad=false;
+
+config.appleStoreType="buy";
+
+config.gameCenterDomain="http://119.29.197.61:8090/game_center_server/local/";
+//config.gameCenterDomain="http://center.feidou.com/center/local/";
+config.turnOnCenter=true;
+//config.turnOnCenter=false;
+
+config.turnOnChatPostfix=true;
+
+config.closeFuncStr="";
+
+config.turnOnMyCard=false;
+config.timeZone="GMT+8";
+config.loginWallEnabled=true;
+
+config.supportTerminalType=3;
+
+config.crossServerIp="10.10.6.77";
+config.crossServer=false;
+config.robotLangStr="zh_CN";
+config.localDomains="";
+config.closeCrossServerConditional=false;

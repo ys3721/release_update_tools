@@ -42,6 +42,7 @@ mount_data_disk_vdb1() {
   df -TH
 }
 
+# 棒棒棒 啊啊啊 测试麦克
 install_depend() {
   yum install -y rsync
   yum install -y libaio

@@ -1,0 +1,43 @@
+#!/bin/bash
+
+export JAVA_HOME=/data0/jdk7/usr/java/jdk1.7.0_15
+export CLASSPATH=.:$JAVA_HOME/jre/lib/rt.jar:$JAVA_HOME/lib/tools.jar
+export PATH=$JAVA_HOME/bin:$PATH
+
+#当前首层目录 比如/data0或者/data5这种
+dir=`pwd | awk -F '/' '{print "/"$2}'`
+
+start(){
+    #find the jars
+    jar_lib=`ls -1 ${dir}/wg_libs/*.jar`
+    jar_lib=`echo $jar_lib | sed 's/ /:/g'`
+    agent_jar=`ls -1 ${dir}/wg_libs/server_lib.jar`
+    VELCP="${dir}/wg_config/game_server_config:$jar_lib"
+    echo $VELCP
+    #init logs
+    if [ ! -d 'logs' ] ; then  mkdir logs ; fi
+    java -Dserver.name=game_server_#server_name# -server -javaagent:$agent_jar -cp $VELCP -Xmx2260M -Xms2260M -Xss256K -XX:NewRatio=2 -XX:PermSize=128m -XX:MaxPermSize=128m -XX:+UseConcMarkSweepGC cn.kx.lj.gameserver.GameServer 1>> /dev/null 2>>logs/game_server_#server_name#_stderr &
+    pid=$!
+    echo "$pid" > ${dir}/wg_script/game_server_pid
+    echo "GameServer_s1559 Process Id:$pid"
+    #java -Dserver.name=game_server_#server_name# -server -cp $VELCP -Xmx2260M -Xms2260M -Xss256K -XX:NewRatio=2 -XX:PermSize=128m -XX:MaxPermSize=128m -XX:+UseConcMarkSweepGC cn.kx.lj.gameserver.GameServer
+}
+
+stop(){
+    pid=`cat ${dir}/wg_script/game_server_pid`
+    echo "Stop GameServer_#server_name# Process Id:$pid"
+    kill $pid
+    rm -f ${dir}/wg_script/game_server_pid
+}
+
+case "$1" in
+  start)
+        start
+        ;;
+  stop)
+        stop
+        ;;
+  *)
+        echo $"Usage: {start|stop}"
+        exit 1
+esac

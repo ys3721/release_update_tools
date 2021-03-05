@@ -1,0 +1,114 @@
+log4j.rootLogger=info,all,stdout
+log4j.logger.kaixin=info,all,stdout,error
+log4j.logger.kaixin.msg=info,msg,stdout,error
+log4j.logger.kaixin.timeout=debug,timeout,stdout,error
+log4j.logger.kaixin.probe=debug,probe,error
+log4j.logger.kaixin.dbs=debug,dbs,error
+log4j.logger.kaixin.scene=info,S,error
+log4j.logger.kaixin.client=info,C,error
+log4j.logger.kaixin.game=info,all,stdout,error
+log4j.logger.kaixin.charge=info,all,stdout,error,charge
+log4j.additivity.kaixin=false
+log4j.additivity.kaixin.msg=false
+log4j.additivity.kaixin.timeout=false
+log4j.additivity.kaixin.probe=false
+log4j.additivity.kaixin.scene=false
+log4j.additivity.kaixin.game=false
+log4j.additivity.kaixin.client=false
+log4j.additivity.kaixin.charge=false
+
+#--------------------stdout--------------------------------
+log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+log4j.appender.stdout.encoding=UTF-8
+log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+log4j.appender.stdout.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss} [%-5p] - %C{1}.%M - %m%n
+
+#--------------------all--------------------------------
+log4j.appender.all=org.apache.log4j.RollingFileAppender
+log4j.appender.all.encoding=UTF-8
+log4j.appender.all.append=true
+log4j.appender.all.File=logs/all.log
+log4j.appender.all.MaxFileSize=10mb
+log4j.appender.all.MaxBackupIndex=2
+log4j.appender.all.layout=org.apache.log4j.PatternLayout
+log4j.appender.all.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss,SSS} - %C{1}.%M - %m%n
+#--------------------dbs--------------------------------
+log4j.appender.dbs=org.apache.log4j.RollingFileAppender
+log4j.appender.dbs.encoding=UTF-8
+log4j.appender.dbs.append=true
+log4j.appender.dbs.File=logs/dbs.log
+log4j.appender.dbs.MaxFileSize=10mb
+log4j.appender.dbs.MaxBackupIndex=2
+log4j.appender.dbs.layout=org.apache.log4j.PatternLayout
+log4j.appender.dbs.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss} - %m%n
+
+#--------------------timeout--------------------------------
+log4j.appender.timeout=org.apache.log4j.RollingFileAppender
+log4j.appender.timeout.encoding=UTF-8
+log4j.appender.timeout.append=true
+log4j.appender.timeout.File=logs/timeoutMsg.log
+log4j.appender.timeout.MaxFileSize=10mb
+log4j.appender.timeout.MaxBackupIndex=2
+log4j.appender.timeout.layout=org.apache.log4j.PatternLayout
+log4j.appender.timeout.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss} - %m%n
+
+#--------------------probe--------------------------------
+log4j.appender.probe=org.apache.log4j.RollingFileAppender
+log4j.appender.probe.encoding=UTF-8
+log4j.appender.probe.append=true
+log4j.appender.probe.File=logs/probe.log
+log4j.appender.probe.MaxFileSize=10mb
+log4j.appender.probe.MaxBackupIndex=2
+log4j.appender.probe.layout=org.apache.log4j.PatternLayout
+log4j.appender.probe.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss} - %m%n
+
+
+#--------------------msg--------------------------------
+log4j.appender.msg=org.apache.log4j.RollingFileAppender
+log4j.appender.msg.encoding=UTF-8
+log4j.appender.msg.append=true
+log4j.appender.msg.File=logs/msg.log
+log4j.appender.msg.MaxFileSize=10mb
+log4j.appender.msg.MaxBackupIndex=2
+log4j.appender.msg.layout=org.apache.log4j.PatternLayout
+log4j.appender.msg.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss} - %m%n
+
+#--------------------charge--------------------------------
+log4j.appender.charge=org.apache.log4j.RollingFileAppender
+log4j.appender.charge.encoding=UTF-8
+log4j.appender.charge.append=true
+log4j.appender.charge.File=logs/charge.log
+log4j.appender.charge.MaxFileSize=20mb
+log4j.appender.charge.MaxBackupIndex=5
+log4j.appender.charge.layout=org.apache.log4j.PatternLayout
+log4j.appender.charge.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss} - %m%n
+
+#--------------------error--------------------------------
+log4j.appender.error=org.apache.log4j.RollingFileAppender
+log4j.appender.error.Threshold=WARN
+log4j.appender.error.encoding=UTF-8
+log4j.appender.error.append=true
+log4j.appender.error.File=logs/error.log
+log4j.appender.error.MaxFileSize=20mb
+log4j.appender.error.MaxBackupIndex=5
+log4j.appender.error.layout=org.apache.log4j.PatternLayout
+log4j.appender.error.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss,SSS} - %C{1}.%M - %m%n
+
+
+log4j.appender.S=org.apache.log4j.RollingFileAppender
+log4j.appender.S.encoding=UTF-8
+log4j.appender.S.append=true
+log4j.appender.S.File=logs/game_server.scene.log
+log4j.appender.S.MaxFileSize=10mb
+log4j.appender.S.MaxBackupIndex=2
+log4j.appender.S.layout=org.apache.log4j.PatternLayout
+log4j.appender.S.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss} - %m%n
+
+log4j.appender.C=org.apache.log4j.RollingFileAppender
+log4j.appender.C.encoding=UTF-8
+log4j.appender.C.append=true
+log4j.appender.C.File=logs/game_server.client.log
+log4j.appender.C.MaxFileSize=10mb
+log4j.appender.C.MaxBackupIndex=2
+log4j.appender.C.layout=org.apache.log4j.PatternLayout
+log4j.appender.C.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss} - %m%n
