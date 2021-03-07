@@ -127,14 +127,35 @@ function generate_deploy_config() {
 
 init_empty_cloud_service() {
   echo_err ${SERVER_WAN_IP}
-  if ssh root@${SERVER_WAN_IP} [ -d "/data111" ] || ssh root@${SERVER_WAN_IP} [ -d "/var/lib/mysql" ]; then
+  if ssh root@${SERVER_WAN_IP} [ -d "/data0" ] || ssh root@${SERVER_WAN_IP} [ -d "/var/lib/mysql" ]; then
     echo_err "当前云服不是未初始化的不能执行该脚本！"
     exit 1;
   else
     echo_info "开始进行初始化云服操作........"
-
   fi
+
+  mount_data0=`ssh root@${SERVER_WAN_IP} mount | grep data0 |wc -l`
+  if [ $mount_data0 -ne 0 ]; then
+    echo_err "当前云服可能已经挂载数据盘不能执行该脚本！"
+    exit 1;
+  fi
+
+  disk_count=`ssh root@${SERVER_WAN_IP} fdisk -l | grep /dev/vdb | wc -l`
+  if [ $disk_count -eq 0 ];then
+    echo "没有数据盘，不需要挂载硬盘，省事儿了~~~~"
+    return 0
+  fi
+  ssh root@${SERVER_WAN_IP} echo "n
+  p
+  1
+
+
+  w
+  " | fdisk /dev/vdb && mkfs -t ext4 /dev/vdb1 && mkdir /data0 && mount /dev/vdb1 /data0
+  ssh root@${SERVER_WAN_IP} df -TH
+
 }
+
 
 send_to_server() {
   echo 1
