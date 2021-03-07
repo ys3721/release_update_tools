@@ -1,6 +1,7 @@
 #! /usr/bin/bash
 # -*-coding=utf8-*-
 # @Auther: Yao Shuai
+source ./echo_util.sh
 
 GAME_ID=5614
 LOCAL_CENTER_IP="119.29.197.61"
@@ -50,11 +51,10 @@ done
 #四个参数 比如s1 s2 s3 s4
 server_file_names=($1 $2 $3 $4)
 #-------------- 欢乐的常量定义完毕 ----------------------------
-
 function generate_deploy_config() {
    server_file_names_arr=$1
    for i in ${server_file_names_arr[*]}; do
-    echo "开始生成"$i"的配置脚本......."
+    echo "开始解析"$i"的配置脚本......."
     ## s1592.config格式：9655 1 s1592.qyz.feidou.com 10.10.6.195 119.29.150.151 s1592 true
     file_content=`cat /c/servers/$i.config`
     echo $file_content
@@ -64,7 +64,8 @@ function generate_deploy_config() {
     _lanIp=`echo $file_content | awk '{print $4}'`
     _wanIp=`echo $file_content | awk '{print $5}'`
     _serverName=`echo $file_content | awk '{print $6}'`
-
+    export SERVER_LAN_IP=$_lanIp
+    export SERVER_WAN_IP=$_wanIp
     #------------------ 生成game server config .js文件 --------------
     echo "开始生成"$i"的server js配置脚本...="$_serverId $_domain $_domain_prefix $_lanIp $_wanIp $_serverName
     server_config_file=./generated/${_serverName}_game_sever.cfg.js
@@ -107,7 +108,7 @@ function generate_deploy_config() {
     cp ./template/launch.sh.log.template $launch_log_file
     #需要替换的字符串 #server_name# #wan_ip# #domain# #log_port# #lan_ip# #log_telnet_port#
     sed -i "s/#server_name#/$_serverName/g" $launch_log_file
-    sed -i "s/#server_id#/$_serverId/g" $$launch_log_file
+    sed -i "s/#server_id#/$_serverId/g" $launch_log_file
 
     #------------------ 生成 gmserver的 db1下xml文件 --------------
     echo "开始生成"$i"的gm配置xml...="$_serverId $_domain $_lanIp $_wanIp $_serverName
@@ -121,10 +122,31 @@ function generate_deploy_config() {
     sed -i "s/#lan_ip#/$_lanIp/g" $gm_xml_file
     sed -i "s/#server_id#/$_serverId/g" $gm_xml_file
     sed -i "s/#mysql_port#/${MYSQL_PORT[$i]}/g" $gm_xml_file
-    #替换魔板 gm的配置
   done
 }
 
-generate_deploy_config "${server_file_names[*]}"
+init_empty_cloud_service() {
+  echo_err ${SERVER_WAN_IP}
+  if ssh root@${SERVER_WAN_IP} [ -d "/data111" ] || ssh root@${SERVER_WAN_IP} [ -d "/var/lib/mysql" ]; then
+    echo_err "当前云服不是未初始化的不能执行该脚本！"
+    exit 1;
+  else
+    echo_info "开始进行初始化云服操作........"
 
-#sleep 1000
+  fi
+}
+
+send_to_server() {
+  echo 1
+}
+
+generate_deploy_config "${server_file_names[*]}"
+#初始化目标服务器 0.安装依赖，挂载数据盘设置swap 1.目录结构 2.jdk 3.mysql
+init_empty_cloud_service
+#把配置放到对应的目录结构
+#生成目标服务器的目录结构
+#把生成的东西拷贝过去 如果不是新服的话不能拷贝
+##send_to_server "${server_file_names[*]}"
+#
+
+sleep 10000
