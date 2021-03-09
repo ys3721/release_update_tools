@@ -218,6 +218,8 @@ install_mysql() {
     ssh root@${WANIP_CFG} "cp /data0/src/my.cnf.multi_four.5.5 /etc/my.cnf"
     ssh root@${WANIP_CFG} "cd /usr/local/mysql/;./scripts/mysql_install_db --user=mysql --datadir=/var/lib/mysql${_db_port}"
   done
+
+  #设置密码和用户
 }
 
 read_config $1
