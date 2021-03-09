@@ -170,8 +170,8 @@ send_config_files() {
   echo_info "Begin copy the config to server $_s_name......$_dir"
   ssh root@${WANIP_CFG} "mkdir -p ${_dir}/wg_config/game_server_config ${_dir}/wg_config/log_server_config \
     ${_dir}/wg_libs ${_dir}/wg_resources ${_dir}/wg_script"
-  scp ./generated/${_s_name}_game_server.cfg.js root@${WANIP_CFG}:$_dir/wg_config/game_server_config
-  scp ./generated/${_s_name}_log_server.cfg.js root@${WANIP_CFG}:$_dir/wg_config/log_server_config
+  scp ./generated/${_s_name}_game_server.cfg.js root@${WANIP_CFG}:$_dir/wg_config/game_server_config/game_server.cfg.js
+  scp ./generated/${_s_name}_log_server.cfg.js root@${WANIP_CFG}:$_dir/wg_config/log_server_config/log_server.cfg.js
   scp ./generated/${_s_name}_gameserver_launch.sh root@${WANIP_CFG}:$_dir/wg_script/gameserver_launch.sh
   scp ./generated/${_s_name}_logserver_launch.sh root@${WANIP_CFG}:$_dir/wg_script/logserver_launch.sh
 
@@ -186,8 +186,8 @@ deploy_server() {
 
   scp /c/servers/wg_release*.zip root@${WANIP_CFG}:${_dir}/
   ssh root@${WANIP_CFG} "unzip -oq $_dir/wg_release_*.zip -d $_dir"
-  ssh root@${WANIP_CFG} "unzip -o $_dir/wg_gameserver/server_lib.zip -d $_dir/wg_libs"
-  ssh root@${WANIP_CFG} "unzip -o $_dir/wg_gameserver/wg_resource.zip -d $_dir/wg_resources"
+  ssh root@${WANIP_CFG} "unzip -oq $_dir/wg_gameserver/server_lib.zip -d $_dir/wg_libs"
+  ssh root@${WANIP_CFG} "unzip -oq $_dir/wg_gameserver/wg_resource.zip -d $_dir/wg_resources"
   ssh root@${WANIP_CFG} "rm -rf /${_dir}/wg_gameserver"
 }
 
@@ -200,10 +200,31 @@ install_depend_software() {
   ssh root@${WANIP_CFG} "yum install -y lrzsz"
 }
 
+install_mysql() {
+  if ssh root@${WANIP_CFG} [ -d "/data0/mysql" ] || ssh root@${WANIP_CFG} [ -d "/var/lib/mysql" ]; then
+    echo_err "HAVE MYSQL can not install a new one!!!"
+    return
+  fi
+  scp /c/servers/Percona-Server-5.5.25a-rel27.1-277.Linux.x86_64.tar.gz root@${WANIP_CFG}:/data0/src/
+  scp /c/servers/my.cnf.multi_four.5.5 root@${WANIP_CFG}:/data0/src/
+  ssh root@${WANIP_CFG} "cd /data0/src && tar -xzf Percona-Server-5.5.25a-rel27.1-277.Linux.x86_64.tar.gz -C /usr/local/"
+  ssh root@${WANIP_CFG} "cd /usr/local && ln -s Percona-Server-5.5.25a-rel27.1-277.Linux.x86_64 mysql"
+
+  ssh root@${WANIP_CFG} "useradd -M mysql -s /sbin/nologin"
+  for _db_port in ${!port2datax[*]}
+  do
+    ssh root@${WANIP_CFG} "mkdir -p /data${port2datax[${_db_port}]}/mysql && chown mysql.mysql -R /data${port2datax[$_db_port]}/mysql"
+    ssh root@${WANIP_CFG} "/bin/ln -s /data${port2datax[$_db_port]}/mysql /var/lib/mysql$_db_port && chown -R mysql.mysql /var/lib/mysql$_db_port"
+    ssh root@${WANIP_CFG} "cp /data0/src/my.cnf.multi_four.5.5 /etc/my.cnf"
+    ssh root@${WANIP_CFG} "cd /usr/local/mysql/;./scripts/mysql_install_db --user=mysql --datadir=/var/lib/mysql${_db_port}"
+  done
+}
+
 read_config $1
 generate_deploy_config
 init_empty_cloud_service
 install_depend_software
+install_mysql
 send_config_files
 deploy_server
 
