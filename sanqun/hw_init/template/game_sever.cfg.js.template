@@ -4,7 +4,7 @@
 config.serverIndex=#server_id#
 config.serverId=#server_id#
 config.bindIp="0.0.0.0"
-config.ports=#game_port#
+config.ports="#game_port#"
 config.serverName="#server_name#"
 config.serverHost="0.0.0.0"
 config.serverDomain="#domain#"
@@ -48,8 +48,7 @@ config.h2ConfigName="game_server_h2.cfg.xml,game_server_h2_query.xml"
 config.battleReportDbConfigName="battle_report_ibatis_config.xml"
 config.turnOnH2Cache=false;
 
-config.flashSocketPolicy="<cross-domain-policy>\r\n<allow-access-from domain=\"*\" to-ports=\"80-65535\" />\r\n </cross-domain-polic
-y>\r\n"
+config.flashSocketPolicy="<cross-domain-policy>\r\n<allow-access-from domain=\"*\" to-ports=\"80-65535\" />\r\n </cross-domain-policy>\r\n"
 config.gameServerCount=1;
 config.authType=1
 

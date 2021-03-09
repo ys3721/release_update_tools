@@ -6,7 +6,7 @@
 		dbIp="#lan_ip#" dbPort="#mysql_port#"
 		dbName="wg_lj" u="gmroot" ps="12345600"
 		telIp="#lan_ip#" telPort="#telnet_port#" />
-<database id="log_#server_id#" typeId="#region_id#" dbSrvName="log_#server_name#" svrName="#server_name#(日志)" svrId="#server_id#"
+<database id="log_#server_id#" typeId="1" dbSrvName="log_#server_name#" svrName="#server_name#(日志)" svrId="#server_id#"
 		svrUrl="http://#domain#"
 		dbIp="#lan_ip#" dbPort="#mysql_port#"
 		dbName="wg_lj_log" u="gmroot" ps="12345600"

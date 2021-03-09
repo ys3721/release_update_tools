@@ -12,14 +12,6 @@ DB_PASSWORD_CONFIG=([sys_user]=root [sys_password]=123456 \
                     [game_user]=root [game_password]=123456 \
                     [gm_user]=gmroot [gm_password]=12345600)
 
-# 定义各种常亮，思路是约定大于配置
-SERVER_PATH=(\\/data0 \\/data1 \\/data5 \\/data6)
-MYSQL_PORT=(3306 3307 3308 3309)
-GAME_PORT=(8080 8307 8308 8309)
-TELNET_PORT=(7000 7307 7308 7309)
-LOG_PORT=(8083 8007 8008 8009)
-EX_PORT=(6060 6307 6308 6309)
-
 # 定义java堆内存大小 然后没用 我只是试试这个循环的语法
 declare -A memory_configs
 declare -A memory_config
@@ -48,126 +40,177 @@ for key in "${!memory_config[@]}";do
   memory_configs[$i,$key]=${memory_config[$key]}
 done
 
-#四个参数 比如s1 s2 s3 s4
-server_file_names=($1 $2 $3 $4)
+# 定义各种常亮，思路是约定大于配置
+declare -A port2datax
+port2datax=([3306]=0 [3307]=1 [3308]=5 [3309]=6)
+declare -A port2log_port
+port2log_port=([3306]=8083 [3307]=8007 [3308]=8008 [3309]=8009)
+declare -A port2game_port
+port2game_port=([3306]=8080 [3307]=8307 [3308]=8308 [3309]=8309)
+declare -A port2telnet_port
+port2telnet_port=([3306]=7000 [3307]=7307 [3308]=7308 [3309]=7309)
+declare -A port2exr_port
+port2exr_port=([3306]=6306 [3307]=6307 [3308]=6308 [3309]=6309)
+
 #-------------- 欢乐的常量定义完毕 ----------------------------
+
+## s1592.config格式：9655 1 s1592.qyz.feidou.com 10.10.6.195 119.29.150.151 s1592 true 3306
+function read_config() {
+    server_file_name=$1
+    echo_debug "[Debug]Begin generate config of server name = "$server_file_name" now......."
+    ## s1592.config格式：9655 1 s1592.qyz.feidou.com 10.10.6.195 119.29.150.151 s1592 true 3306
+    file_content=`cat /c/servers/${server_file_name}.config`
+    echo_debug "[Debug]$file_content"
+    export SERVERID_CFG=`echo $file_content | awk '{print $1}'`
+    export DOMAIN_CFG=`echo $file_content | awk '{print $3}'`
+    export DOMAIN_PREFIX_CFG=`echo $DOMAIN_CFG | awk 'BEGIN{FS="."} {print $1}'`
+    export LANIP_CFG=`echo $file_content | awk '{print $4}'`
+    export WANIP_CFG=`echo $file_content | awk '{print $5}'`
+    export SERVERNAME_CFG=`echo $file_content | awk '{print $6}'`
+    export DB_PORT_CFG=`echo $file_content | awk '{print $8}'`
+    echo_debug "[Debug]Read config file finish, $SERVERID_CFG  $DOMAIN_CFG $DOMAIN_PREFIX_CFG $LANIP_CFG \
+    $WANIP_CFG $SERVERNAME_CFG ${DB_PORT_CFG}"
+}
+
 function generate_deploy_config() {
-   server_file_names_arr=$1
-   for i in ${server_file_names_arr[*]}; do
-    echo "开始解析"$i"的配置脚本......."
-    ## s1592.config格式：9655 1 s1592.qyz.feidou.com 10.10.6.195 119.29.150.151 s1592 true
-    file_content=`cat /c/servers/$i.config`
-    echo $file_content
-    _serverId=`echo $file_content | awk '{print $1}'`
-    _domain=`echo $file_content | awk '{print $3}'`
-    _domain_prefix=`echo $_domain | awk 'BEGIN{FS="."} {print $1}'`
-    _lanIp=`echo $file_content | awk '{print $4}'`
-    _wanIp=`echo $file_content | awk '{print $5}'`
-    _serverName=`echo $file_content | awk '{print $6}'`
-    export SERVER_LAN_IP=$_lanIp
-    export SERVER_WAN_IP=$_wanIp
+    echo_debug "[Debug]Begin generate config of server name = $SERVERNAME_CFG $DB_PORT_CFG now......."
+    _db_port=${DB_PORT_CFG}
     #------------------ 生成game server config .js文件 --------------
-    echo "开始生成"$i"的server js配置脚本...="$_serverId $_domain $_domain_prefix $_lanIp $_wanIp $_serverName
-    server_config_file=./generated/${_serverName}_game_sever.cfg.js
+    server_config_file=./generated/${SERVERNAME_CFG}_game_server.cfg.js
     cp ./template/game_sever.cfg.js.template $server_config_file
     #需要替换的字符串 #domain# #data_path# #mysql_port# #server_id# #server_name# #log_port# #game_port# #telnet_port#
-    sed -i "s/#domain#/$domain/g" $server_config_file
-    sed -i "s/#data_path#/${SERVER_PATH[$i]}/g" $server_config_file
-    sed -i "s/#server_id#/$_serverId/g" $server_config_file
-    sed -i "s/#server_name#/$_serverName/g" $server_config_file
-    sed -i "s/#log_port#/${LOG_PORT[$i]}/g" $server_config_file
-    sed -i "s/#game_port#/${GAME_PORT[$i]}/g" $server_config_file
-    sed -i "s/#telnet_port#/${TELNET_PORT[$i]}/g" $server_config_file
+    sed -i "s/#domain#/$DOMAIN_CFG/g" $server_config_file
+    sed -i "s/#data_path#/\\/data${port2datax[$_db_port]}/g" $server_config_file
+    sed -i "s/#server_id#/$SERVERID_CFG/g" $server_config_file
+    sed -i "s/#server_name#/$SERVERNAME_CFG/g" $server_config_file
+    sed -i "s/#log_port#/${port2log_port[$_db_port]}/g" $server_config_file
+    sed -i "s/#game_port#/${port2game_port[$_db_port]}/g" $server_config_file
+    sed -i "s/#telnet_port#/${port2telnet_port[$_db_port]}/g" $server_config_file
 
     #------------------ 生成log server config .js文件 --------------
-    echo "开始生成"$i"的log js配置脚本...="$_serverId $_domain $_lanIp $_wanIp $_serverName
-    log_config_file=./generated/${_serverName}_log_server.cfg.js
+    echo_debug "[Debug]Begin generate config of LOG SEVER name = $SERVERNAME_CFG $DB_PORT_CFG now......."
+    log_config_file=./generated/${SERVERNAME_CFG}_log_server.cfg.js
     cp ./template/log_server.cfg.js.template $log_config_file
     #需要替换的字符串 #server_name# #wan_ip# #domain# #log_port# #lan_ip# #log_telnet_port#
-    sed -i "s/#server_name#/$_serverName/g" $log_config_file
-    sed -i "s/#wan_ip#/$_wanIp/g" $log_config_file
-    sed -i "s/#domain#/$_serverName/g" $log_config_file
-    sed -i "s/#log_port#/${LOG_PORT[$i]}/g" $log_config_file
-    sed -i "s/#lan_ip#/$_lanIp/g" $log_config_file
-    sed -i "s/#server_id#/$_serverId/g" $log_config_file
+    sed -i "s/#server_name#/$SERVERNAME_CFG/g" $log_config_file
+    sed -i "s/#wan_ip#/$WANIP_CFG/g" $log_config_file
+    sed -i "s/#domain#/$SERVERNAME_CFG/g" $log_config_file
+    sed -i "s/#log_port#/${port2log_port[$_db_port]}/g" $log_config_file
+    sed -i "s/#lan_ip#/$LANIP_CFG/g" $log_config_file
+    sed -i "s/#server_id#/$SERVERID_CFG/g" $log_config_file
 
     #------------------ 生成game sever launch 脚本文件 --------------
-    echo "开始生成"$i"的server启动脚本...="$_serverId $_domain $_lanIp $_wanIp $_serverName
-    launch_server_file=./generated/${_serverName}_gameserver_launch.sh
+    echo "Begin generate $i 的server launch script sh ...=$SERVERID_CFG $DOMAIN_CFG $LANIP_CFG $WANIP_CFG $SERVERNAME_CFG"
+    launch_server_file=./generated/${SERVERNAME_CFG}_gameserver_launch.sh
     cp ./template/launch.sh.server.template $launch_server_file
     #需要替换的字符串 #server_name# #wan_ip# #domain# #log_port# #lan_ip# #log_telnet_port#
-    sed -i "s/#server_name#/$_serverName/g" $launch_server_file
-    sed -i "s/#wan_ip#/$_wanIp/g" $launch_server_file
-    sed -i "s/#log_port#/${LOG_PORT[$i]}/g" $launch_server_file
-    sed -i "s/#lan_ip#/$_lanIp/g" $launch_server_file
-    sed -i "s/#server_id#/$_serverId/g" $launch_server_file
+    sed -i "s/#server_name#/$SERVERNAME_CFG/g" $launch_server_file
+    sed -i "s/#wan_ip#/$WANIP_CFG/g" $launch_server_file
+    sed -i "s/#log_port#/${port2log_port[$_db_port]}/g" $launch_server_file
+    sed -i "s/#lan_ip#/$LANIP_CFG/g" $launch_server_file
+    sed -i "s/#server_id#/$SERVERID_CFG/g" $launch_server_file
 
     #------------------ 生成log sever launch 脚本文件 --------------
-    echo "开始生成"$i"的log启动脚本...="$_serverId $_domain $_lanIp $_wanIp $_serverName
-    launch_log_file=./generated/${_serverName}_logserver_launch.sh
+    echo "Begin generate $i log launch sh script...=$SERVERID_CFG $DOMAIN_CFG $LANIP_CFG $WANIP_CFG $SERVERNAME_CFG"
+    launch_log_file=./generated/${SERVERNAME_CFG}_logserver_launch.sh
     cp ./template/launch.sh.log.template $launch_log_file
     #需要替换的字符串 #server_name# #wan_ip# #domain# #log_port# #lan_ip# #log_telnet_port#
-    sed -i "s/#server_name#/$_serverName/g" $launch_log_file
-    sed -i "s/#server_id#/$_serverId/g" $launch_log_file
+    sed -i "s/#server_name#/$SERVERNAME_CFG/g" $launch_log_file
+    sed -i "s/#server_id#/$SERVERID_CFG/g" $launch_log_file
 
     #------------------ 生成 gmserver的 db1下xml文件 --------------
-    echo "开始生成"$i"的gm配置xml...="$_serverId $_domain $_lanIp $_wanIp $_serverName
-    gm_xml_file=./generated/${_serverName}_db.xml
+    echo "Begin generate $i gm config xml...=$SERVERID_CFG $DOMAIN_CFG $LANIP_CFG $WANIP_CFG $SERVERNAME_CFG"
+    gm_xml_file=./generated/${SERVERNAME_CFG}_db.xml
     cp ./template/gm_db.xml.template $gm_xml_file
      #需要替换的字符串 #server_name# #wan_ip# #domain# #log_port# #lan_ip# #log_telnet_port#
-    sed -i "s/#server_name#/$_serverName/g" $gm_xml_file
-    sed -i "s/#wan_ip#/$_wanIp/g" $gm_xml_file
-    sed -i "s/#domain#/$_domain/g" $gm_xml_file
-    sed -i "s/#log_port#/${LOG_PORT[$i]}/g" $gm_xml_file
-    sed -i "s/#lan_ip#/$_lanIp/g" $gm_xml_file
-    sed -i "s/#server_id#/$_serverId/g" $gm_xml_file
-    sed -i "s/#mysql_port#/${MYSQL_PORT[$i]}/g" $gm_xml_file
-  done
+    sed -i "s/#server_name#/$SERVERNAME_CFG/g" $gm_xml_file
+    sed -i "s/#wan_ip#/$WANIP_CFG/g" $gm_xml_file
+    sed -i "s/#domain#/$DOMAIN_CFG/g" $gm_xml_file
+    sed -i "s/#log_port#/${port2log_port[$_db_port]}/g" $gm_xml_file
+    sed -i "s/#lan_ip#/$LANIP_CFG/g" $gm_xml_file
+    sed -i "s/#server_id#/$SERVERID_CFG/g" $gm_xml_file
+    sed -i "s/#mysql_port#/$_db_port/g" $gm_xml_file
+    sed -i "s/#telnet_port#/${port2telnet_port[$_db_port]}/g" $gm_xml_file
+
 }
 
 init_empty_cloud_service() {
-  echo_err ${SERVER_WAN_IP}
-  if ssh root@${SERVER_WAN_IP} [ -d "/data0" ] || ssh root@${SERVER_WAN_IP} [ -d "/var/lib/mysql" ]; then
-    echo_err "当前云服不是未初始化的不能执行该脚本！"
-    exit 1;
-  else
-    echo_info "开始进行初始化云服操作........"
+  echo_info "Will Init empty server of ${WANIP_CFG}"
+  if ssh root@${WANIP_CFG} [ -d "/data0" ] || ssh root@${WANIP_CFG} [ -d "/var/lib/mysql" ]; then
+    echo_err "NOT EMPTY SERVER , DONOT need init "
+    return
   fi
 
-  mount_data0=`ssh root@${SERVER_WAN_IP} mount | grep data0 |wc -l`
+  mount_data0=`ssh root@${WANIP_CFG} mount | grep data0 |wc -l`
   if [ $mount_data0 -ne 0 ]; then
-    echo_err "当前云服可能已经挂载数据盘不能执行该脚本！"
-    exit 1;
+    echo_err "NOT UN MOUNT , DONOT need mount disk "
+    return
   fi
 
-  disk_count=`ssh root@${SERVER_WAN_IP} fdisk -l | grep /dev/vdb | wc -l`
+  disk_count=`ssh root@${WANIP_CFG} fdisk -l | grep /dev/vdb | wc -l`
   if [ $disk_count -eq 0 ];then
-    echo "没有数据盘，不需要挂载硬盘，省事儿了~~~~"
-    return 0
+    echo "NO data disk , skip fdisk ~~~~"
+  else
+    ssh root@${WANIP_CFG} echo "n
+    p
+    1
+
+
+    w
+    " | fdisk /dev/vdb && mkfs -t ext4 /dev/vdb1 && mkdir /data0 && mount /dev/vdb1 /data0
   fi
-  ssh root@${SERVER_WAN_IP} echo "n
-  p
-  1
-
-
-  w
-  " | fdisk /dev/vdb && mkfs -t ext4 /dev/vdb1 && mkdir /data0 && mount /dev/vdb1 /data0
-  ssh root@${SERVER_WAN_IP} df -TH
-
+  ssh root@${WANIP_CFG} df -TH
+  ssh root@${WANIP_CFG} "mkdir -p /data0/src"
+  echo_info "Init server of ${WANIP_CFG} Finish!!"
 }
 
+send_config_files() {
+  _s_name=$SERVERNAME_CFG
+  _dir="/data${port2datax[$DB_PORT_CFG]}"
+  echo_info "Begin copy the config to server $_s_name......$_dir"
+  ssh root@${WANIP_CFG} "mkdir -p ${_dir}/wg_config/game_server_config ${_dir}/wg_config/log_server_config \
+    ${_dir}/wg_libs ${_dir}/wg_resources ${_dir}/wg_script"
+  scp ./generated/${_s_name}_game_server.cfg.js root@${WANIP_CFG}:$_dir/wg_config/game_server_config
+  scp ./generated/${_s_name}_log_server.cfg.js root@${WANIP_CFG}:$_dir/wg_config/log_server_config
+  scp ./generated/${_s_name}_gameserver_launch.sh root@${WANIP_CFG}:$_dir/wg_script/gameserver_launch.sh
+  scp ./generated/${_s_name}_logserver_launch.sh root@${WANIP_CFG}:$_dir/wg_script/logserver_launch.sh
 
-send_to_server() {
-  echo 1
+  echo_info "Finish copy the config to server $_s_name......"
 }
 
-generate_deploy_config "${server_file_names[*]}"
-#初始化目标服务器 0.安装依赖，挂载数据盘设置swap 1.目录结构 2.jdk 3.mysql
+deploy_server() {
+  _dir="/data${port2datax[$DB_PORT_CFG]}"
+  ssh root@${WANIP_CFG} "rm -rf /${_dir}/wg_resources/*"
+  ssh root@${WANIP_CFG} "rm -rf /${_dir}/wg_libs/*"
+  ssh root@${WANIP_CFG} "rm -rf /${_dir}/wg_script/logs"
+
+  scp /c/servers/wg_release*.zip root@${WANIP_CFG}:${_dir}/
+  ssh root@${WANIP_CFG} "unzip -oq $_dir/wg_release_*.zip -d $_dir"
+  ssh root@${WANIP_CFG} "unzip -o $_dir/wg_gameserver/server_lib.zip -d $_dir/wg_libs"
+  ssh root@${WANIP_CFG} "unzip -o $_dir/wg_gameserver/wg_resource.zip -d $_dir/wg_resources"
+  ssh root@${WANIP_CFG} "rm -rf /${_dir}/wg_gameserver"
+}
+
+install_depend_software() {
+  scp /c/servers/jdk7.tar.gz root@${WANIP_CFG}:/data0/src/
+  ssh root@${WANIP_CFG} "tar -xzvf /data0/src/jdk7.tar.gz -C /data0"
+  ssh root@${WANIP_CFG} "yum install -y rsync"
+  ssh root@${WANIP_CFG} "yum install -y libaio"
+  ssh root@${WANIP_CFG} "yum install -y perl"
+  ssh root@${WANIP_CFG} "yum install -y lrzsz"
+}
+
+read_config $1
+generate_deploy_config
 init_empty_cloud_service
+install_depend_software
+send_config_files
+deploy_server
+
+#初始化目标服务器 0.安装依赖，挂载数据盘设置swap 1.目录结构 2.jdk 3.mysql
+#init_empty_cloud_service
+#deploy_four_dir "${server_file_names[*]}"
 #把配置放到对应的目录结构
 #生成目标服务器的目录结构
 #把生成的东西拷贝过去 如果不是新服的话不能拷贝
-##send_to_server "${server_file_names[*]}"
-#
-
 sleep 10000

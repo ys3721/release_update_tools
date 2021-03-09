@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export JAVA_HOME=/data0/jdk7/usr/java/jdk1.7.0_15
+export JAVA_HOME=/data0/jdk1.7.0_80
 export CLASSPATH=.:$JAVA_HOME/jre/lib/rt.jar:$JAVA_HOME/lib/tools.jar
 export PATH=$JAVA_HOME/bin:$PATH
 
