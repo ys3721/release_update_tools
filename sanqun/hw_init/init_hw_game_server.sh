@@ -4,7 +4,7 @@
 source ./echo_util.sh
 
 GAME_ID=5614
-LOCAL_CENTER_IP="119.29.197.61"
+LOCAL_CENTER_IP="123.207.245.161"
 
 # 定义的数据库用户名和密码
 declare -A db_password_config
@@ -176,6 +176,28 @@ send_config_files() {
   scp ./generated/${_s_name}_logserver_launch.sh root@${WANIP_CFG}:$_dir/wg_script/logserver_launch.sh
 
   echo_info "Finish copy the config to server $_s_name......"
+  scp ./generated/${SERVERNAME_CFG}_db.xml root@${LOCAL_CENTER_IP}:/data0/wg_gmserver/WEB-INF/classes/conf/db1/
+
+  center_xml_path=/data0/wg_center/WEB-INF/classes/gameserver.xml
+  match_content=serverID\="${SERVERID_CFG}"
+  echo_debug $match_content
+  have_count=`ssh root@${LOCAL_CENTER_IP} sed -n /${match_content}/p ${center_xml_path}|wc -l`
+  echo_debug ${have_count}---------------
+  if [ $have_count -eq 0 ]; then
+    ssh root@${LOCAL_CENTER_IP} "sed -i 's#</servers>#\t<server ip=\"${WANIP_CFG}\" port=\"${port2telnet_port[${DB_PORT_CFG}]}\" gameID=\"5614\" serverID=\"${SERVERID_CFG}\"/>\t\n</servers>#g' $center_xml_path"
+    else
+    echo_err "当前中心服已经有这个服务器的配置了，注意不会覆盖！"
+  fi
+}
+
+test() {
+  ssh root@${WANIP_CFG} 'echo $PATH'
+  ssh root@${WANIP_CFG} 'export PATH=/usr/local/mysql/bin:$PATH'
+  ssh root@${WANIP_CFG} 'echo $PATH'
+  if [ `ssh root@${WANIP_CFG} 'cat ~/.bashrc | grep mysql | wc -l'` -eq 0 ]; then
+    echo 'export PATH=$PATH:/usr/local/mysql/bin/' | ssh root@${WANIP_CFG} "cat >> ~/.bashrc"
+  fi
+  ssh root@${WANIP_CFG} 'echo $PATH'
 }
 
 deploy_server() {
@@ -201,8 +223,14 @@ install_depend_software() {
 }
 
 install_mysql() {
-  if ssh root@${WANIP_CFG} [ -d "/data0/mysql" ] || ssh root@${WANIP_CFG} [ -d "/var/lib/mysql" ]; then
+  if ssh root@${WANIP_CFG} [ -d "/data0/mysql" ] || ssh root@${WANIP_CFG} [ -d "/var/lib/mysql3306" ]; then
     echo_err "HAVE MYSQL can not install a new one!!!"
+    return
+  fi
+  if [ `ssh root@${WANIP_CFG} 'cat ~/.bashrc | grep mysql | wc -l'` -eq 0 ]; then
+    echo 'export PATH=$PATH:/usr/local/mysql/bin/' | ssh root@${WANIP_CFG} "cat >> ~/.bashrc"
+  else
+    echo_err "HAVE MYSQL config in the bashrc, myqsql is installed, sill install !!"
     return
   fi
   scp /c/servers/Percona-Server-5.5.25a-rel27.1-277.Linux.x86_64.tar.gz root@${WANIP_CFG}:/data0/src/
@@ -215,20 +243,29 @@ install_mysql() {
   do
     ssh root@${WANIP_CFG} "mkdir -p /data${port2datax[${_db_port}]}/mysql && chown mysql.mysql -R /data${port2datax[$_db_port]}/mysql"
     ssh root@${WANIP_CFG} "/bin/ln -s /data${port2datax[$_db_port]}/mysql /var/lib/mysql$_db_port && chown -R mysql.mysql /var/lib/mysql$_db_port"
-    ssh root@${WANIP_CFG} "cp /data0/src/my.cnf.multi_four.5.5 /etc/my.cnf"
     ssh root@${WANIP_CFG} "cd /usr/local/mysql/;./scripts/mysql_install_db --user=mysql --datadir=/var/lib/mysql${_db_port}"
+    ssh root@${WANIP_CFG} "cp /data0/src/my.cnf.multi_four.5.5 /etc/my.cnf"
   done
-
+  #启动
+  ssh root@${WANIP_CFG} '/etc/init.d/mysqld_multi.server start'
+  sleep 20
+  ssh root@${WANIP_CFG} '/etc/init.d/mysqld_multi.server report'
   #设置密码和用户
+  for _db_port in ${!port2datax[*]}
+  do
+    echo 1
+  done
 }
 
 read_config $1
-generate_deploy_config
-init_empty_cloud_service
-install_depend_software
-install_mysql
-send_config_files
-deploy_server
+test
+#generate_deploy_config
+#init_empty_cloud_service
+#install_depend_software
+#install_mysql
+#send_config_files
+#deploy_server
+
 
 #初始化目标服务器 0.安装依赖，挂载数据盘设置swap 1.目录结构 2.jdk 3.mysql
 #init_empty_cloud_service
