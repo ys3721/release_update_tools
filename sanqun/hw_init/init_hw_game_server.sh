@@ -52,12 +52,13 @@ port2telnet_port=([3306]=7000 [3307]=7307 [3308]=7308 [3309]=7309)
 declare -A port2exr_port
 port2exr_port=([3306]=6306 [3307]=6307 [3308]=6308 [3309]=6309)
 
+rsync_ip="192.168.0.30"
 #-------------- 欢乐的常量定义完毕 ----------------------------
 
 ## s1592.config格式：9655 1 s1592.qyz.feidou.com 10.10.6.195 119.29.150.151 s1592 true 3306
 function read_config() {
     server_file_name=$1
-    echo_debug "[Debug]Begin generate config of server name = "$server_file_name" now......."
+    echo_info "Begin read config of server name = "$server_file_name" now......."
     ## s1592.config格式：9655 1 s1592.qyz.feidou.com 10.10.6.195 119.29.150.151 s1592 true 3306
     file_content=`cat /c/servers/${server_file_name}.config`
     echo_debug "[Debug]$file_content"
@@ -73,7 +74,7 @@ function read_config() {
 }
 
 function generate_deploy_config() {
-    echo_debug "[Debug]Begin generate config of server name = $SERVERNAME_CFG $DB_PORT_CFG now......."
+    echo_info "Begin generate config of server name=${SERVERNAME_CFG}${DB_PORT_CFG}now......."
     _db_port=${DB_PORT_CFG}
     #------------------ 生成game server config .js文件 --------------
     server_config_file=./generated/${SERVERNAME_CFG}_game_server.cfg.js
@@ -190,28 +191,6 @@ send_config_files() {
   fi
 }
 
-test() {
-  if [ `ssh root@${WANIP_CFG} 'cat ~/.bashrc | grep mysql | wc -l'` -eq 0 ]; then
-    echo 'export PATH=$PATH:/usr/local/mysql/bin/' | ssh root@${WANIP_CFG} "cat >> ~/.bashrc"
-  else
-    echo_err "HAVE MYSQL config in the bashrc, myqsql is installed, sill install !!"
-    return
-  fi
-  for _db_port in ${!port2datax[*]}
-  do
-    echo $_db_port
-  done
-  for _db_port in ${!port2datax[*]}
-  do
-    echo $_db_port
-    ssh root@${WANIP_CFG} "mysql -uroot -h127.0.0.1 -P${_db_port} -e \"grant select on *.* to tongji@'119.29.252.93' identified by 'tongji1234!@#$';\""
-    ssh root@${WANIP_CFG} "mysql -uroot -h127.0.0.1 -P${_db_port} -e \"grant all privileges on *.* to 'gmroot'@${LOCAL_CENTER_IP} identified by '12345600';\""
-    ssh root@${WANIP_CFG} "mysql -uroot -h127.0.0.1 -P${_db_port} -e \"grant all privileges on *.* to 'root'@'127.0.0.1' identified by '123456';"\"
-    ssh root@${WANIP_CFG} "mysql -uroot -p${_db_port} -h127.0.0.1 -P123456 -e \"delete from mysql.user where password='';\""
-    ssh root@${WANIP_CFG} "mysql -uroot -p${_db_port} -h127.0.0.1 -P123456 -e \"flush privileges;\""
-  done
-}
-
 deploy_server() {
   _dir="/data${port2datax[$DB_PORT_CFG]}"
   ssh root@${WANIP_CFG} "rm -rf /${_dir}/wg_resources/*"
@@ -233,8 +212,8 @@ deploy_server() {
 }
 
 install_depend_software() {
-  scp /c/servers/jdk7.tar.gz root@${WANIP_CFG}:/data0/src/
-  ssh root@${WANIP_CFG} "tar -xzvf /data0/src/jdk7.tar.gz -C /data0"
+  ssh root@${WANIP_CFG} "rsync -av ${rsync_ip}::download/jdk7.tar.gz /data0/src/"
+  ssh root@${WANIP_CFG} "tar -xzf /data0/src/jdk7.tar.gz -C /data0"
   ssh root@${WANIP_CFG} "yum install -y rsync"
   ssh root@${WANIP_CFG} "yum install -y libaio"
   ssh root@${WANIP_CFG} "yum install -y perl"
@@ -247,13 +226,13 @@ install_mysql() {
     return
   fi
   if [ `ssh root@${WANIP_CFG} 'cat ~/.bashrc | grep mysql | wc -l'` -eq 0 ]; then
-    echo 'export PATH=$PATH:/usr/local/mysql/bin/' | ssh root@${WANIP_CFG} "cat >> ~/.bashrc"
+    echo 'export PATH=$PATH:/usr/local/mysql/bin/:/data0/jdk1.7.0_80/bin/' | ssh root@${WANIP_CFG} "cat >> ~/.bashrc"
   else
     echo_err "HAVE MYSQL config in the bashrc, myqsql is installed, sill install !!"
     return
   fi
-  scp /c/servers/Percona-Server-5.5.25a-rel27.1-277.Linux.x86_64.tar.gz root@${WANIP_CFG}:/data0/src/
-  scp /c/servers/my.cnf.multi_four.5.5 root@${WANIP_CFG}:/data0/src/
+  ssh root@${WANIP_CFG} "rsync -av ${rsync_ip}::download/Percona-Server-5.5.25a-rel27.1-277.Linux.x86_64.tar.gz /data0/src/"
+  ssh root@${WANIP_CFG} "rsync -av ${rsync_ip}::download/my.cnf.multi_four.5.5 /data0/src/"
   ssh root@${WANIP_CFG} "cd /data0/src && tar -xzf Percona-Server-5.5.25a-rel27.1-277.Linux.x86_64.tar.gz -C /usr/local/"
   ssh root@${WANIP_CFG} "cd /usr/local && ln -s Percona-Server-5.5.25a-rel27.1-277.Linux.x86_64 mysql"
 
@@ -263,49 +242,34 @@ install_mysql() {
     ssh root@${WANIP_CFG} "mkdir -p /data${port2datax[${_db_port}]}/mysql && chown mysql.mysql -R /data${port2datax[$_db_port]}/mysql"
     ssh root@${WANIP_CFG} "/bin/ln -s /data${port2datax[$_db_port]}/mysql /var/lib/mysql$_db_port && chown -R mysql.mysql /var/lib/mysql$_db_port"
     ssh root@${WANIP_CFG} "cd /usr/local/mysql/;./scripts/mysql_install_db --user=mysql --datadir=/var/lib/mysql${_db_port}"
-    ssh root@${WANIP_CFG} "cp /data0/src/my.cnf.multi_four.5.5 /etc/my.cnf"
   done
   #启动
+  ssh root@${WANIP_CFG} "cp /data0/src/my.cnf.multi_four.5.5 /etc/my.cnf;cp /usr/local/mysql/support-files/mysqld_multi.server /etc/init.d/mysqld_multi.server"
   ssh root@${WANIP_CFG} '/etc/init.d/mysqld_multi.server start'
-  sleep 20
+  echo_debug "------------------------------------------------"
+  sleep 30
   ssh root@${WANIP_CFG} '/etc/init.d/mysqld_multi.server report'
   #设置密码和用户
   for _db_port in ${!port2datax[*]}
   do
     ssh root@${WANIP_CFG} "mysql -uroot -h127.0.0.1 -P${_db_port} -e \"grant select on *.* to tongji@'119.29.252.93' identified by 'tongji1234!@#$';\""
     ssh root@${WANIP_CFG} "mysql -uroot -h127.0.0.1 -P${_db_port} -e \"grant all privileges on *.* to 'gmroot'@${LOCAL_CENTER_IP} identified by '12345600';\""
-    ssh root@${WANIP_CFG} "mysql -uroot -h127.0.0.1 -P${_db_port} -e \"grant all privileges on *.* to 'root'@'127.0.0.1' identified by '123456';"\"
-    ssh root@${WANIP_CFG} "mysql -uroot -p${_db_port} -h127.0.0.1 -P123456 -e \"delete from mysql.user where password='';\""
-    ssh root@${WANIP_CFG} "mysql -uroot -p${_db_port} -h127.0.0.1 -P123456 -e \"flush privileges;\""
+    ssh root@${WANIP_CFG} "mysql -uroot -h127.0.0.1 -P${_db_port} -e \"grant all privileges on *.* to 'root'@'127.0.0.1' identified by '123456';\""
+    ssh root@${WANIP_CFG} "mysql -uroot -P${_db_port} -h127.0.0.1 -P123456 -e \"delete from mysql.user where password='';\""
+    ssh root@${WANIP_CFG} "mysql -uroot -P${_db_port} -h127.0.0.1 -P123456 -e \"flush privileges;\""
   done
   #设置定时备份
   if ssh root@${WANIP_CFG} [ ! -f "/var/spool/cron/root" ] || [ `ssh root@${WANIP_CFG} "cat /var/spool/cron/root | grep backup_mysql | wc -l"` -eq 0 ]; then
     ssh root@${WANIP_CFG} 'echo "$(($RANDOM%60)) 04 * * * /usr/bin/python2  /data0/backup_mysql.py 2>&1 > /dev/null" >> /var/spool/cron/root'
   fi
-  scp /c/servers/backup_mysql.py root@${WANIP_CFG}:/data0/
-}
-
-
-
-test() {
-   #设置定时备份
- echo 1
+  ssh root@${WANIP_CFG} "rsync -av ${rsync_ip}::download/backup_mysql.py /data0/"
 }
 
 read_config $1
-test
-#generate_deploy_config
-#init_empty_cloud_service
-#install_depend_software
-#install_mysql
-#send_config_files
-#deploy_server
-
-
-#初始化目标服务器 0.安装依赖，挂载数据盘设置swap 1.目录结构 2.jdk 3.mysql
-#init_empty_cloud_service
-#deploy_four_dir "${server_file_names[*]}"
-#把配置放到对应的目录结构
-#生成目标服务器的目录结构
-#把生成的东西拷贝过去 如果不是新服的话不能拷贝
+generate_deploy_config
+init_empty_cloud_service
+install_depend_software
+install_mysql
+send_config_files
+deploy_server
 sleep 10000
