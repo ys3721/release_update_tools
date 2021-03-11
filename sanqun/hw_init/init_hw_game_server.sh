@@ -169,10 +169,17 @@ send_config_files() {
   _s_name=$SERVERNAME_CFG
   _dir="/data${port2datax[$DB_PORT_CFG]}"
   echo_info "Begin copy the config to server $_s_name......$_dir"
+  ssh root@${WANIP_CFG} "rm -rf ${_dir}/wg_config/*"
   ssh root@${WANIP_CFG} "mkdir -p ${_dir}/wg_config/game_server_config ${_dir}/wg_config/log_server_config \
     ${_dir}/wg_libs ${_dir}/wg_resources ${_dir}/wg_script"
   scp ./generated/${_s_name}_game_server.cfg.js root@${WANIP_CFG}:$_dir/wg_config/game_server_config/game_server.cfg.js
+  scp ./template/nomodify/hibernate.properties.template root@${WANIP_CFG}:$_dir/wg_config/game_server_config/hibernate.properties
+  scp ./template/nomodify/log4j.properties.server.template root@${WANIP_CFG}:$_dir/wg_config/game_server_config/log4j.properties
+
   scp ./generated/${_s_name}_log_server.cfg.js root@${WANIP_CFG}:$_dir/wg_config/log_server_config/log_server.cfg.js
+  scp ./template/nomodify/jdbc.properties.template root@${WANIP_CFG}:$_dir/wg_config/log_server_config/jdbc.properties
+  scp ./template/nomodify/log4j.properties.log.template root@${WANIP_CFG}:$_dir/wg_config/log_server_config/log4j.properties
+
   scp ./generated/${_s_name}_gameserver_launch.sh root@${WANIP_CFG}:$_dir/wg_script/gameserver_launch.sh
   scp ./generated/${_s_name}_logserver_launch.sh root@${WANIP_CFG}:$_dir/wg_script/logserver_launch.sh
 
@@ -197,18 +204,16 @@ deploy_server() {
   ssh root@${WANIP_CFG} "rm -rf /${_dir}/wg_libs/*"
   ssh root@${WANIP_CFG} "rm -rf /${_dir}/wg_script/logs"
 
-  scp /c/servers/wg_release*.zip root@${WANIP_CFG}:${_dir}/
+  ssh root@${WANIP_CFG} "rsync -av ${rsync_ip}::download/wg_release*.zip /${_dir}/"
   ssh root@${WANIP_CFG} "unzip -oq $_dir/wg_release_*.zip -d $_dir"
   ssh root@${WANIP_CFG} "unzip -oq $_dir/wg_gameserver/server_lib.zip -d $_dir/wg_libs"
   ssh root@${WANIP_CFG} "unzip -oq $_dir/wg_gameserver/wg_resource.zip -d $_dir/wg_resources"
   ssh root@${WANIP_CFG} "rm -rf /${_dir}/wg_gameserver"
   #db init
-  if [ `ssh root@${WANIP_CFG} "mysql -uroot -p123456 -h127.0.0.1 -P${DB_PORT_CFG} wg_lj -e \"select count(*) from t_character;\""` -eq 0 ]; then
-    echo_debug "Init sql for server "${SERVERNAME_CFG}"-"${DB_PORT_CFG}
-    ssh root@${WANIP_CFG} "mysql -uroot -p123456 -h127.0.0.1 -P${DB_PORT_CFG} wg_lj < /data${port2datax[${DB_PORT_CFG}]}/wg_db_init/lj_db_init.sql"
-    ssh root@${WANIP_CFG} "mysql -uroot -p123456 -h127.0.0.1 -P${DB_PORT_CFG} < /data${port2datax[${DB_PORT_CFG}]}/wg_db_init/log_reason.sql"
-    echo_debug "Init sql for server "${SERVERNAME_CFG}"-"${DB_PORT_CFG}" Finished! "
-  fi
+  echo_debug "Init sql for server "${SERVERNAME_CFG}"-"${DB_PORT_CFG}
+  ssh root@${WANIP_CFG} "mysql -uroot -p123456 -h127.0.0.1 -P${DB_PORT_CFG} < /data${port2datax[${DB_PORT_CFG}]}/wg_db_init/lj_db_init.sql"
+  ssh root@${WANIP_CFG} "mysql -uroot -p123456 -h127.0.0.1 -P${DB_PORT_CFG} < /data${port2datax[${DB_PORT_CFG}]}/wg_db_init/log_reason.sql"
+  echo_debug "Init sql for server "${SERVERNAME_CFG}"-"${DB_PORT_CFG}" Finished! "
 }
 
 install_depend_software() {
@@ -247,7 +252,7 @@ install_mysql() {
   ssh root@${WANIP_CFG} "cp /data0/src/my.cnf.multi_four.5.5 /etc/my.cnf;cp /usr/local/mysql/support-files/mysqld_multi.server /etc/init.d/mysqld_multi.server"
   ssh root@${WANIP_CFG} '/etc/init.d/mysqld_multi.server start'
   echo_debug "------------------------------------------------"
-  sleep 30
+  sleep 25
   ssh root@${WANIP_CFG} '/etc/init.d/mysqld_multi.server report'
   #设置密码和用户
   for _db_port in ${!port2datax[*]}
@@ -255,14 +260,27 @@ install_mysql() {
     ssh root@${WANIP_CFG} "mysql -uroot -h127.0.0.1 -P${_db_port} -e \"grant select on *.* to tongji@'119.29.252.93' identified by 'tongji1234!@#$';\""
     ssh root@${WANIP_CFG} "mysql -uroot -h127.0.0.1 -P${_db_port} -e \"grant all privileges on *.* to 'gmroot'@${LOCAL_CENTER_IP} identified by '12345600';\""
     ssh root@${WANIP_CFG} "mysql -uroot -h127.0.0.1 -P${_db_port} -e \"grant all privileges on *.* to 'root'@'127.0.0.1' identified by '123456';\""
-    ssh root@${WANIP_CFG} "mysql -uroot -P${_db_port} -h127.0.0.1 -P123456 -e \"delete from mysql.user where password='';\""
-    ssh root@${WANIP_CFG} "mysql -uroot -P${_db_port} -h127.0.0.1 -P123456 -e \"flush privileges;\""
+    ssh root@${WANIP_CFG} "mysql -uroot -p123456 -h127.0.0.1 -P${_db_port} -e \"delete from mysql.user where password='';\""
+    ssh root@${WANIP_CFG} "mysql -uroot -p123456 -h127.0.0.1 -p123456 -P${_db_port} -e \"flush privileges;\""
+    echo_debug "sql grant finish at ${_db_port}"
   done
   #设置定时备份
   if ssh root@${WANIP_CFG} [ ! -f "/var/spool/cron/root" ] || [ `ssh root@${WANIP_CFG} "cat /var/spool/cron/root | grep backup_mysql | wc -l"` -eq 0 ]; then
     ssh root@${WANIP_CFG} 'echo "$(($RANDOM%60)) 04 * * * /usr/bin/python2  /data0/backup_mysql.py 2>&1 > /dev/null" >> /var/spool/cron/root'
   fi
   ssh root@${WANIP_CFG} "rsync -av ${rsync_ip}::download/backup_mysql.py /data0/"
+}
+
+test() {
+  for _db_port in ${!port2datax[*]}
+  do
+    ssh root@${WANIP_CFG} "mysql -uroot -h127.0.0.1 -P${_db_port} -e \"grant select on *.* to tongji@'119.29.252.93' identified by 'tongji1234!@#$';\""
+    ssh root@${WANIP_CFG} "mysql -uroot -h127.0.0.1 -P${_db_port} -e \"grant all privileges on *.* to 'gmroot'@${LOCAL_CENTER_IP} identified by '12345600';\""
+    ssh root@${WANIP_CFG} "mysql -uroot -h127.0.0.1 -P${_db_port} -e \"grant all privileges on *.* to 'root'@'127.0.0.1' identified by '123456';\""
+    ssh root@${WANIP_CFG} "mysql -uroot -p123456 -h127.0.0.1 -P${_db_port} -e \"delete from mysql.user where password='';\""
+    ssh root@${WANIP_CFG} "mysql -uroot -p123456 -h127.0.0.1 -p123456 -P${_db_port} -e \"flush privileges;\""
+    echo_debug "sql grant finish at ${_db_port}"
+  done
 }
 
 read_config $1
