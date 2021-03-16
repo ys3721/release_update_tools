@@ -60,7 +60,7 @@ function read_config() {
     server_file_name=$1
     echo_info "Begin read config of server name = "$server_file_name" now......."
     ## s1592.config格式：9655 1 s1592.qyz.feidou.com 10.10.6.195 119.29.150.151 s1592 true 3306
-    file_content=`cat /c/servers/${server_file_name}.config`
+    file_content=`cat /data2/servers/${server_file_name}.config`
     echo_debug "[Debug]$file_content"
     export SERVERID_CFG=`echo $file_content | awk '{print $1}'`
     export DOMAIN_CFG=`echo $file_content | awk '{print $3}'`
@@ -161,7 +161,13 @@ init_empty_cloud_service() {
     " | fdisk /dev/vdb && mkfs -t ext4 /dev/vdb1 && mkdir /data0 && mount /dev/vdb1 /data0
   fi
   ssh root@${WANIP_CFG} df -TH
-  ssh root@${WANIP_CFG} "mkdir -p /data0/src"
+  if [ `root@${WANIP_CFG} "echo /etc/fstab | grep swap | wc -l"` -ne 0 ]; then
+    ssh root@${WANIP_CFG} "mkdir -p /data0/src"
+    ssh root@${WANIP_CFG} "dd if=/dev/zero of=/swapfile bs=4M count=2000"
+    ssh root@${WANIP_CFG} "mkswap /swapfile;swapon /swapfile"
+    ssh root@${WANIP_CFG} 'echo "/swapfile swap swap defaults 0 0" >>/etc/fstab'
+    ssh root@${WANIP_CFG} "mount -a;free"
+  fi
   echo_info "Init server of ${WANIP_CFG} Finish!!"
 }
 
