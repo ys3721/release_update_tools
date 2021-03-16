@@ -162,12 +162,12 @@ init_empty_cloud_service() {
   fi
   ssh root@${WANIP_CFG} df -TH
   if [ `root@${WANIP_CFG} "echo /etc/fstab | grep swap | wc -l"` -ne 0 ]; then
-    ssh root@${WANIP_CFG} "mkdir -p /data0/src"
     ssh root@${WANIP_CFG} "dd if=/dev/zero of=/swapfile bs=4M count=2000"
     ssh root@${WANIP_CFG} "mkswap /swapfile;swapon /swapfile"
     ssh root@${WANIP_CFG} 'echo "/swapfile swap swap defaults 0 0" >>/etc/fstab'
     ssh root@${WANIP_CFG} "mount -a;free"
   fi
+  ssh root@${WANIP_CFG} "mkdir -p /data0/src"
   echo_info "Init server of ${WANIP_CFG} Finish!!"
 }
 
@@ -205,6 +205,7 @@ send_config_files() {
 }
 
 deploy_server() {
+  echo_info "Begin deploy server......."
   _dir="/data${port2datax[$DB_PORT_CFG]}"
   ssh root@${WANIP_CFG} "rm -rf /${_dir}/wg_resources/*"
   ssh root@${WANIP_CFG} "rm -rf /${_dir}/wg_libs/*"
@@ -220,6 +221,7 @@ deploy_server() {
   ssh root@${WANIP_CFG} "mysql -uroot -p123456 -h127.0.0.1 -P${DB_PORT_CFG} < /data${port2datax[${DB_PORT_CFG}]}/wg_db_init/lj_db_init.sql"
   ssh root@${WANIP_CFG} "mysql -uroot -p123456 -h127.0.0.1 -P${DB_PORT_CFG} < /data${port2datax[${DB_PORT_CFG}]}/wg_db_init/log_reason.sql"
   echo_debug "Init sql for server "${SERVERNAME_CFG}"-"${DB_PORT_CFG}" Finished! "
+  echo_info "Begin deploy server Finished......."
 }
 
 install_depend_software() {
