@@ -85,7 +85,7 @@ config.templateXorLoad=false;
 
 config.appleStoreType="buy";
 
-config.gameCenterDomain="http://119.29.197.61:8090/game_center_server/local/";
+config.gameCenterDomain="http://123.207.245.161:8090/game_center_server/local/";
 //config.gameCenterDomain="http://center.feidou.com/center/local/";
 config.turnOnCenter=true;
 //config.turnOnCenter=false;
@@ -100,7 +100,7 @@ config.loginWallEnabled=true;
 
 config.supportTerminalType=3;
 
-config.crossServerIp="10.10.6.77";
+config.crossServerIp="123.207.245.161";
 config.crossServer=false;
 config.robotLangStr="zh_CN";
 config.localDomains="";
