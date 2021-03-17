@@ -78,7 +78,7 @@ function generate_deploy_config() {
     _db_port=${DB_PORT_CFG}
     #------------------ 生成game server config .js文件 --------------
     server_config_file=./generated/${SERVERNAME_CFG}_game_server.cfg.js
-    cp ./template/game_sever.cfg.js.template $server_config_file
+    \cp ./template/game_server.cfg.js.template $server_config_file
     #需要替换的字符串 #domain# #data_path# #mysql_port# #server_id# #server_name# #log_port# #game_port# #telnet_port#
     sed -i "s/#domain#/$DOMAIN_CFG/g" $server_config_file
     sed -i "s/#data_path#/\\/data${port2datax[$_db_port]}/g" $server_config_file
@@ -91,7 +91,7 @@ function generate_deploy_config() {
     #------------------ 生成log server config .js文件 --------------
     echo_debug "[Debug]Begin generate config of LOG SEVER name = $SERVERNAME_CFG $DB_PORT_CFG now......."
     log_config_file=./generated/${SERVERNAME_CFG}_log_server.cfg.js
-    cp ./template/log_server.cfg.js.template $log_config_file
+    \cp ./template/log_server.cfg.js.template $log_config_file
     #需要替换的字符串 #server_name# #wan_ip# #domain# #log_port# #lan_ip# #log_telnet_port#
     sed -i "s/#server_name#/$SERVERNAME_CFG/g" $log_config_file
     sed -i "s/#wan_ip#/$WANIP_CFG/g" $log_config_file
@@ -103,7 +103,7 @@ function generate_deploy_config() {
     #------------------ 生成game sever launch 脚本文件 --------------
     echo "Begin generate $i 的server launch script sh ...=$SERVERID_CFG $DOMAIN_CFG $LANIP_CFG $WANIP_CFG $SERVERNAME_CFG"
     launch_server_file=./generated/${SERVERNAME_CFG}_gameserver_launch.sh
-    cp ./template/launch.sh.server.template $launch_server_file
+    \cp ./template/launch.sh.server.template $launch_server_file
     #需要替换的字符串 #server_name# #wan_ip# #domain# #log_port# #lan_ip# #log_telnet_port#
     sed -i "s/#server_name#/$SERVERNAME_CFG/g" $launch_server_file
     sed -i "s/#wan_ip#/$WANIP_CFG/g" $launch_server_file
@@ -114,7 +114,7 @@ function generate_deploy_config() {
     #------------------ 生成log sever launch 脚本文件 --------------
     echo "Begin generate $i log launch sh script...=$SERVERID_CFG $DOMAIN_CFG $LANIP_CFG $WANIP_CFG $SERVERNAME_CFG"
     launch_log_file=./generated/${SERVERNAME_CFG}_logserver_launch.sh
-    cp ./template/launch.sh.log.template $launch_log_file
+    \cp ./template/launch.sh.log.template $launch_log_file
     #需要替换的字符串 #server_name# #wan_ip# #domain# #log_port# #lan_ip# #log_telnet_port#
     sed -i "s/#server_name#/$SERVERNAME_CFG/g" $launch_log_file
     sed -i "s/#server_id#/$SERVERID_CFG/g" $launch_log_file
@@ -122,13 +122,13 @@ function generate_deploy_config() {
     #------------------ 生成 gmserver的 db1下xml文件 --------------
     echo "Begin generate $i gm config xml...=$SERVERID_CFG $DOMAIN_CFG $LANIP_CFG $WANIP_CFG $SERVERNAME_CFG"
     gm_xml_file=./generated/${SERVERNAME_CFG}_db.xml
-    cp ./template/gm_db.xml.template $gm_xml_file
+    \cp ./template/gm_db.xml.template $gm_xml_file
      #需要替换的字符串 #server_name# #wan_ip# #domain# #log_port# #lan_ip# #log_telnet_port#
     sed -i "s/#server_name#/$SERVERNAME_CFG/g" $gm_xml_file
     sed -i "s/#wan_ip#/$WANIP_CFG/g" $gm_xml_file
     sed -i "s/#domain#/$DOMAIN_CFG/g" $gm_xml_file
     sed -i "s/#log_port#/${port2log_port[$_db_port]}/g" $gm_xml_file
-    sed -i "s/#lan_ip#/$LANIP_CFG/g" $gm_xml_file
+    sed -i "s/#lan_ip#/$WANIP_CFG/g" $gm_xml_file
     sed -i "s/#server_id#/$SERVERID_CFG/g" $gm_xml_file
     sed -i "s/#mysql_port#/$_db_port/g" $gm_xml_file
     sed -i "s/#telnet_port#/${port2telnet_port[$_db_port]}/g" $gm_xml_file
@@ -161,7 +161,7 @@ init_empty_cloud_service() {
     " | fdisk /dev/vdb && mkfs -t ext4 /dev/vdb1 && mkdir /data0 && mount /dev/vdb1 /data0
   fi
   ssh root@${WANIP_CFG} df -TH
-  if [ `root@${WANIP_CFG} "echo /etc/fstab | grep swap | wc -l"` -ne 0 ]; then
+  if [ `ssh root@${WANIP_CFG} "echo /etc/fstab | grep swap | wc -l"` -ne 0 ]; then
     ssh root@${WANIP_CFG} "dd if=/dev/zero of=/swapfile bs=4M count=2000"
     ssh root@${WANIP_CFG} "mkswap /swapfile;swapon /swapfile"
     ssh root@${WANIP_CFG} 'echo "/swapfile swap swap defaults 0 0" >>/etc/fstab'
@@ -211,7 +211,8 @@ deploy_server() {
   ssh root@${WANIP_CFG} "rm -rf /${_dir}/wg_libs/*"
   ssh root@${WANIP_CFG} "rm -rf /${_dir}/wg_script/logs"
 
-  ssh root@${WANIP_CFG} "rsync -av ${rsync_ip}::download/wg_release*.zip /${_dir}/"
+  scp /data3/update_server/wg_release_*.zip root@${LANIP_CFG}:${_dir}/
+  #ssh root@${WANIP_CFG} "rsync -av ${rsync_ip}::download/wg_release*.zip /${_dir}/"
   ssh root@${WANIP_CFG} "unzip -oq $_dir/wg_release_*.zip -d $_dir"
   ssh root@${WANIP_CFG} "unzip -oq $_dir/wg_gameserver/server_lib.zip -d $_dir/wg_libs"
   ssh root@${WANIP_CFG} "unzip -oq $_dir/wg_gameserver/wg_resource.zip -d $_dir/wg_resources"
@@ -259,7 +260,7 @@ install_mysql() {
   #启动
   ssh root@${WANIP_CFG} "cp /data0/src/my.cnf.multi_four.5.5 /etc/my.cnf;cp /usr/local/mysql/support-files/mysqld_multi.server /etc/init.d/mysqld_multi.server"
   ssh root@${WANIP_CFG} '/etc/init.d/mysqld_multi.server start'
-  echo_debug "------------------------------------------------"
+  echo_debug "Wait Mysql start...................wait..."
   sleep 25
   ssh root@${WANIP_CFG} '/etc/init.d/mysqld_multi.server report'
   #设置密码和用户
@@ -298,4 +299,4 @@ install_depend_software
 install_mysql
 send_config_files
 deploy_server
-sleep 10000
+sleep 10
