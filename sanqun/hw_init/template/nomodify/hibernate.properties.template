@@ -1,4 +1,4 @@
-hibernate.connection.url=jdbc:mysql://127.0.0.1:3306/wg_lj?useUnicode=true&characterEncoding=utf-8&useServerPrepStmts=true
+hibernate.connection.url=jdbc:mysql://127.0.0.1:xxxxxxxxxxxxxxxxxxxxxxx/wg_lj?useUnicode=true&characterEncoding=utf-8&useServerPrepStmts=true
 hibernate.connection.username=root
 hibernate.connection.password=123456
 hibernate.connection.provider_class=org.hibernate.connection.C3P0ConnectionProvider
