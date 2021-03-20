@@ -1,2 +1,3 @@
 monitor/monitor/target/*
 *.log
+/sanqun/hw_init/generated/
