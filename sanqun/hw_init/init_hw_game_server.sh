@@ -133,6 +133,18 @@ function generate_deploy_config() {
     sed -i "s/#mysql_port#/$_db_port/g" $gm_xml_file
     sed -i "s/#telnet_port#/${port2telnet_port[$_db_port]}/g" $gm_xml_file
 
+    #------------------ 生成 gameserverd的 hibernate.properties 文件 --------------
+    echo "Begin generate $i gs hibernate properties...=$SERVERID_CFG $DOMAIN_CFG $LANIP_CFG $WANIP_CFG $SERVERNAME_CFG"
+    hibernate_properties_file=./generated/${SERVERNAME_CFG}_hibernate.properties
+    \cp ./template/hibernate.properties.template $hibernate_properties_file
+    sed -i "s/#mysql_port#/$_db_port/g" $hibernate_properties_file
+
+    #------------------ 生成 logerver's jdbc.properties 文件 --------------
+    echo "Begin generate $i logerver jdbc properties...=$SERVERID_CFG $DOMAIN_CFG $LANIP_CFG $WANIP_CFG $SERVERNAME_CFG"
+    jdbc_properties_file=./generated/${SERVERNAME_CFG}_jdbc.properties
+    \cp ./template/jdbc.properties.template $jdbc_properties_file
+    sed -i "s/#mysql_port#/$_db_port/g" $jdbc_properties_file
+
 }
 
 init_empty_cloud_service() {
@@ -179,11 +191,11 @@ send_config_files() {
   ssh root@${WANIP_CFG} "mkdir -p ${_dir}/wg_config/game_server_config ${_dir}/wg_config/log_server_config \
     ${_dir}/wg_libs ${_dir}/wg_resources ${_dir}/wg_script"
   scp ./generated/${_s_name}_game_server.cfg.js root@${WANIP_CFG}:$_dir/wg_config/game_server_config/game_server.cfg.js
-  scp ./template/nomodify/hibernate.properties.template root@${WANIP_CFG}:$_dir/wg_config/game_server_config/hibernate.properties
+  scp ./generated/${_s_name}_hibernate.properties root@${WANIP_CFG}:$_dir/wg_config/game_server_config/hibernate.properties
   scp ./template/nomodify/log4j.properties.server.template root@${WANIP_CFG}:$_dir/wg_config/game_server_config/log4j.properties
 
   scp ./generated/${_s_name}_log_server.cfg.js root@${WANIP_CFG}:$_dir/wg_config/log_server_config/log_server.cfg.js
-  scp ./template/nomodify/jdbc.properties.template root@${WANIP_CFG}:$_dir/wg_config/log_server_config/jdbc.properties
+  scp ./generated/${_s_name}_jdbc.properties root@${WANIP_CFG}:$_dir/wg_config/log_server_config/jdbc.properties
   scp ./template/nomodify/log4j.properties.log.template root@${WANIP_CFG}:$_dir/wg_config/log_server_config/log4j.properties
 
   scp ./generated/${_s_name}_gameserver_launch.sh root@${WANIP_CFG}:$_dir/wg_script/gameserver_launch.sh
@@ -195,7 +207,7 @@ send_config_files() {
   center_xml_path=/data0/wg_center/WEB-INF/classes/gameserver.xml
   match_content=serverID\="${SERVERID_CFG}"
   echo_debug $match_content
-  have_count=`ssh root@${LOCAL_CENTER_IP} sed -n /${match_content}/p ${center_xml_path}|wc -l`
+  have_count=$(ssh root@${LOCAL_CENTER_IP} sed -n /${match_content}/p ${center_xml_path} | wc -l)
   echo_debug ${have_count}---------------
   if [ $have_count -eq 0 ]; then
     ssh root@${LOCAL_CENTER_IP} "sed -i 's#</servers>#\t<server ip=\"${WANIP_CFG}\" port=\"${port2telnet_port[${DB_PORT_CFG}]}\" gameID=\"5614\" serverID=\"${SERVERID_CFG}\"/>\t\n</servers>#g' $center_xml_path"

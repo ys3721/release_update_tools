@@ -1,0 +1,10 @@
+hibernate.connection.url=jdbc:mysql://127.0.0.1:#mysql_port#/wg_lj?useUnicode=true&characterEncoding=utf-8&useServerPrepStmts=true
+hibernate.connection.username=root
+hibernate.connection.password=123456
+hibernate.connection.provider_class=org.hibernate.connection.C3P0ConnectionProvider
+hibernate.show_sql=false
+hibernate.hbm2ddl.auto=validate
+hibernate.c3p0.min_size=5
+hibernate.c3p0.max_size=100
+hibernate.c3p0.timeout=1000
+hibernate.c3p0.max_statements=50
