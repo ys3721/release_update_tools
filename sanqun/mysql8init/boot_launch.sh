@@ -3,7 +3,8 @@
  **********************************************************
  * Author        : Yao Shuai
  * Create time   : 2021-04-15 20:55
- * Description   : I don't know how to star the springboot jar graceful....
+ * Description   : I don't know how to start the springboot
+ *                 jar graceful.... so write it.
  * *******************************************************
 !
 
@@ -19,7 +20,7 @@ function start() {
       -XX:+PrintGCDetails -Xloggc:./logs/gc.log -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=./logs/dumpcrash.bin -XX:+UseG1GC -jar $jarfile >> ./logs/boot.log 2>&1 &
   pid=$!
   echo "$pid" > ./boot.pid
-  echo "Sprintboot ${jarfile} Process Id:$pid"
+  echo "Sprintboot ${jarfile} Process Id:$pid maybe running!"
 }
 
 function stop(){
