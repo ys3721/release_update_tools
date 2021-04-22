@@ -42,3 +42,42 @@ case "$1" in
         exit 1
         ;;
 esac
+
+<<!
+ **********************************************************
+java -server -Xms1024m -Xmx1024m -XX:NewSize=256m \
+     -XX:MaxNewSize=256m \
+     -XX:+UseConcMarkSweepGC \
+     -XX:CMSInitiatingOccupancyFraction=70
+     -XX:+PrintGCDetails \
+     -XX:+PrintGCDateStamps \
+     -XX:+PrintTenuringDistribution \
+     -Xloggc:logs/gc.log \
+     -Djava.awt.headless=true
+     -Dcom.sun.management.jmxremote -classpath ...
+
+     1.7
+     -Xms13g -Xmx13g -Xss512k -XX:PermSize=384m -XX:MaxPermSize=384m -XX:NewSize=12g -XX:MaxNewSize=12g
+-XX:SurvivorRatio=18 -XX:MaxDirectMemorySize=2g -XX:+UseParNewGC -XX:ParallelGCThreads=4
+-XX:MaxTenuringThreshold=15 -XX:+CMSParallelRemarkEnabled -XX:+CMSScavengeBeforeRemark -XX:+UseConcMarkSweepGC
+-XX:+DisableExplicitGC -XX:+UseCMSInitiatingOccupancyOnly -XX:CMSInitiatingOccupancyFraction=70
+-XX:+ScavengeBeforeFullGC -XX:+UseCMSCompactAtFullCollection -XX:CMSFullGCsBeforeCompaction=9
+-XX:+CMSClassUnloadingEnabled  -XX:CMSInitiatingPermOccupancyFraction=70 -XX:+ExplicitGCInvokesConcurrent
+-XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+PrintGCApplicationConcurrentTime -XX:+PrintHeapAtGC
+-Xloggc:/data/applogs/heap_trace.txt -XX:-HeapDumpOnOutOfMemoryError
+-XX:HeapDumpPath=/data/applogs/HeapDumpOnOutOfMemoryError
+
+    1.8 but why not g1?
+-Xms13g -Xmx13g -Xss512k -XX:MetaspaceSize=384m -XX:MaxMetaspaceSize=384m -XX:NewSize=11g -XX:MaxNewSize=11g -XX:SurvivorRatio=18\
+ -XX:MaxDirectMemorySize=2g -XX:+UseParNewGC -XX:ParallelGCThreads=4 -XX:MaxTenuringThreshold=15 \
+ -XX:+UseConcMarkSweepGC -XX:+DisableExplicitGC -XX:+UseCMSInitiatingOccupancyOnly -XX:+ScavengeBeforeFullGC \
+ -XX:+CMSScavengeBeforeRemark -XX:+CMSParallelRemarkEnabled -XX:CMSInitiatingOccupancyFraction=70 \
+ -XX:+CMSClassUnloadingEnabled -XX:SoftRefLRUPolicyMSPerMB=0 -XX:-ReduceInitialCardMarks -XX:+CMSClassUnloadingEnabled \
+ -XX:+ExplicitGCInvokesConcurrent -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+PrintGCApplicationConcurrentTime \
+ -XX:+PrintHeapAtGC -Xloggc:/data/applogs/heap_trace.txt -XX:-HeapDumpOnOutOfMemoryError \
+ -XX:HeapDumpPath=/data/applogs/HeapDumpOnOutOfMemoryError"
+    try this:
+-XX:PermSize=128m -XX:MaxPermSize=128m -XX:NewRatio=2 -XX:SurvivorRatio=8 -XX:MaxTenuringThreshold=15 -XX:+UseParallelOldGC -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+PrintTenuringDistribution -Xloggc:./logs/gc.log
+ * *******************************************************
+!
+
