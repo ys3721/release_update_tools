@@ -72,3 +72,7 @@ case "$1" in
       echo $"Usage: {go [secretKey] [count]}"
       ;;
 esac
+
+curl -X POST -H "Content-Type: application/json" \
+        -d '{"msg_type":"text","content":{"text":"大家好我是小花花，来自🐟家村，来加入宗门的。。。。"}}' \
+  https://open.feishu.cn/open-apis/bot/v2/hook/737173ca-732a-4d4d-8974-98ba3e2aa4f4
